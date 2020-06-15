@@ -17,7 +17,7 @@ client.on("chat", (channel, userstate, message, self) => {
     function inMessage(msg) {
         return message.toLowerCase().includes(msg);
     }
-    function fancyTimeFormat(time) {
+    function secondsToTimeFormat(time) {
         // Hours, minutes and seconds
         var hrs = ~~(time / 3600);
         var mins = ~~((time % 3600) / 60);
@@ -46,7 +46,7 @@ client.on("chat", (channel, userstate, message, self) => {
             .then(function (response) {
                 var data = response.data.results[classResponse][0]
                 if (data) {
-                    var time = fancyTimeFormat(data.duration);
+                    var time = secondsToTimeFormat(data.duration);
                     //Tempus | (Solly) Boshy is ranked 2/47 on jump_rabbit_final3 with time: 10:48.06
                     client.say(channel, `(${classResponse == 'soldier' ? 'Solly' : 'Demo'}) ${data.name} is ranked ${data.rank} on ${map} with time: ${time}`);
                 }
@@ -80,7 +80,7 @@ client.on("chat", (channel, userstate, message, self) => {
                                 }
                             });
                             if (data) {
-                                var time = fancyTimeFormat(data.duration);
+                                var time = secondsToTimeFormat(data.duration);
                                 client.say(channel, `(${classResponse == 'soldier' ? 'Solly' : 'Demo'}) ${data.name} is ranked ${rankIndex}/${timesLength} on ${map} with time: ${time}`);
                             }
                             else {
@@ -136,7 +136,7 @@ client.on("chat", (channel, userstate, message, self) => {
             .then(function (response) {
                 var data = response.data.results[classResponse][0];
                 if (data) {
-                    var time = fancyTimeFormat(data.duration);
+                    var time = secondsToTimeFormat(data.duration);
                     //Tempus | (Solly) Boshy is ranked 2/47 on jump_rabbit_final3 with time: 10:48.06
                     client.say(channel, `(${classResponse == 'soldier' ? 'Solly' : 'Demo'}) ${data.name} is ranked ${data.rank} on ${map} bonus ${response.data.zone_info.zoneindex} with time: ${time}`);
                 }
