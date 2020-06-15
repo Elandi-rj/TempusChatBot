@@ -60,42 +60,46 @@ client.on("chat", (channel, userstate, message, self) => {
             })
     }
     function SearchPlayerAndTime(map, searchTerm, classResponse) {
-        var personQuery = `https://tempus.xyz/api/search/playersAndMaps/${searchTerm}`;
-        console.log(personQuery);
-        axios.get(personQuery)
+        var playerQuery = `https://tempus.xyz/api/search/playersAndMaps/${searchTerm}`;
+        console.log(playerQuery);
+        axios.get(playerQuery)
             .then(function (response) {
-                var person = response.data.players[0];
-                if (person) {
-                    var query = `https://tempus.xyz/api/maps/name/${map}/zones/typeindex/map/1/records/list?limit=0`
-                    console.log(query);
-                    axios.get(query)
-                        .then(function (response) {
-                            var rankIndex = 0;
-                            var timesLength = 0;
-                            var data = response.data.results[classResponse].find(function (element, index, array) {
-                                if (element.player_info.id == person.id) {
-                                    rankIndex = index + 1;
-                                    timesLength = array.length;
-                                    return element;
-                                }
-                            });
-                            if (data) {
-                                var time = secondsToTimeFormat(data.duration);
-                                client.say(channel, `(${classResponse == 'soldier' ? 'Solly' : 'Demo'}) ${data.name} is ranked ${rankIndex}/${timesLength} on ${map} with time: ${time}`);
-                            }
-                            else {
-                                client.say(channel, 'no person or time found');
-                            }
-
-                        })
-                        .catch(function (error) {
-                            // handle error
-                            client.say(channel, error.response.data.error);
-                        })
+                var player = response.data.players[0];
+                if (player) {
+                    SearchTimeWithPlayer(player, classResponse, map)
                 }
                 else {
                     client.say(channel, `No person was found`);
                 }
+            })
+            .catch(function (error) {
+                // handle error
+                client.say(channel, error.response.data.error);
+            })
+    }
+    function SearchTimeWithPlayer(player, classResponse, map) {
+        var query = `https://tempus.xyz/api/maps/name/${map}/zones/typeindex/map/1/records/list?limit=0`
+        console.log(query);
+
+        axios.get(query)
+            .then(function (response) {
+                var rankIndex = 0;
+                var timesLength = 0;
+                var data = response.data.results[classResponse].find(function (element, index, array) {
+                    if (element.player_info.id == player.id) {
+                        rankIndex = index + 1;
+                        timesLength = array.length;
+                        return element;
+                    }
+                });
+                if (data) {
+                    var time = secondsToTimeFormat(data.duration);
+                    client.say(channel, `(${classResponse == 'soldier' ? 'Solly' : 'Demo'}) ${data.name} is ranked ${rankIndex}/${timesLength} on ${map} with time: ${time}`);
+                }
+                else {
+                    client.say(channel, 'no time found');
+                }
+
             })
             .catch(function (error) {
                 // handle error
@@ -160,6 +164,7 @@ client.on("chat", (channel, userstate, message, self) => {
     // add !playerinfo function for ranks and such
     // !srank 20
     // add course wr and times too
+    // !demo maybe
     // add !svid
     // maybe add !recent https://tempus.xyz/api/activity
 
