@@ -15,7 +15,7 @@ client.on("chat", (channel, userstate, message, self) => {
     //message is the message itself.
     //self is your bot. 
     function inMessage(msg) {
-        return message.toLowerCase().includes(msg);
+        return message.split(' ')[0].toLowerCase().includes(msg);
     }
     function secondsToTimeFormat(time) {
         // Hours, minutes and seconds
@@ -213,7 +213,7 @@ client.on("chat", (channel, userstate, message, self) => {
         var map = ClosestsName(message.split(' ')[1]);
         var index = message.split(' ')[2] - 0;
         var bonusIndex = message.split(' ')[3] - 0;
-        BonusTime(command, map, 'soldier', index, bonusIndex)
+        BonusTime(command, map, 'demoman', index, bonusIndex)
     }
     if (inMessage('!sbwr')) {
         var command = message.split(' ')[0];
@@ -227,7 +227,7 @@ client.on("chat", (channel, userstate, message, self) => {
         var map = ClosestsName(message.split(' ')[1]);
         var index = message.split(' ')[2] - 0;
         var bonusIndex = message.split(' ')[3] - 0;
-        BonusTime(command, map, 'soldier', index, bonusIndex)
+        BonusTime(command, map, 'demoman', index, bonusIndex)
     }
     //https://tempus.xyz/api/players/id/170674/rank
 });
