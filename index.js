@@ -48,7 +48,7 @@ client.on("chat", (channel, userstate, message, self) => {
                 if (data) {
                     var time = secondsToTimeFormat(data.duration);
                     //Tempus | (Solly) Boshy is ranked 2/47 on jump_rabbit_final3 with time: 10:48.06
-                    client.say(channel, `(${classResponse == 'soldier' ? 'Solly' : 'Demo'}) ${data.name} is ranked ${data.rank} on ${map} with time: ${time}`);
+                    client.say(channel, `(${classResponse == 'soldier' ? 'Solly' : 'Demo'}) ${data.name} is ranked ${index} on ${map} with time: ${time}`);
                 }
                 else {
                     client.say(channel, `No time was found`);
@@ -144,7 +144,7 @@ client.on("chat", (channel, userstate, message, self) => {
                 if (data) {
                     var time = secondsToTimeFormat(data.duration);
                     //Tempus | (Solly) Boshy is ranked 2/47 on jump_rabbit_final3 with time: 10:48.06
-                    client.say(channel, `(${classResponse == 'soldier' ? 'Solly' : 'Demo'}) ${data.name} is ranked ${data.rank} on ${map} bonus ${response.data.zone_info.zoneindex} with time: ${time}`);
+                    client.say(channel, `(${classResponse == 'soldier' ? 'Solly' : 'Demo'}) ${data.name} is ranked ${index} on ${map} bonus ${response.data.zone_info.zoneindex} with time: ${time}`);
                 }
                 else {
                     client.say(channel, `No time was found`);
@@ -158,6 +158,7 @@ client.on("chat", (channel, userstate, message, self) => {
     }
     //todo add player.js feature back
     // add !playerinfo function for ranks and such
+    // !srank 20
     // add course wr and times too
     // add !svid
     // maybe add !recent https://tempus.xyz/api/activity
@@ -167,7 +168,7 @@ client.on("chat", (channel, userstate, message, self) => {
     if (inMessage('!stime')) {
         var command = message.split(' ')[0];
         var map = ClosestsName(message.split(' ')[1]);
-        var searchTerm = message.split(' ')[2];
+        var searchTerm = message.split(' ').slice(2).join(' ');
         var index = message.split(' ')[2] - 0;
         if (!isNaN(searchTerm - 0)) {
             MapTime(map, 'soldier', command, index);
@@ -185,7 +186,7 @@ client.on("chat", (channel, userstate, message, self) => {
     if (inMessage('!dtime')) {
         var command = message.split(' ')[0];
         var map = ClosestsName(message.split(' ')[1]);
-        var searchTerm = message.split(' ')[2];
+        var searchTerm = message.split(' ').slice(2).join(' ');
         var index = message.split(' ')[2] - 0;
         if (!isNaN(searchTerm - 0)) {
             MapTime(map, 'demoman', command, index);
