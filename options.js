@@ -6,10 +6,10 @@ const options = {
         reconnect: true
     },
     identity: {
-        username: "YourBotsTwitchNameHere",
-        password: "oauth:twitchacountauthnumber"
+        username: "",
+        password: "oauth:"
     },
-    channels: ['elandi', 'au_matty', 'vicetfz']
+    channels: ['elandi']
 };
 
 

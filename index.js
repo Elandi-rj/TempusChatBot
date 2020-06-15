@@ -1,7 +1,8 @@
 const tmi = require("tmi.js");
 const options = require("./options"); //Your options file
 const axios = require('axios');
-const mapFunctions = require('./MapFunctions');
+const ClosestsName = require('./MapFunctions.js').ClosestsName;
+const UpdateMapNames = require('./MapFunctions.js').UpdateMapNames;
 const findPlayer = require('./players');
 //Connect to twitch server
 const client = new tmi.client(options);
@@ -159,7 +160,7 @@ client.on("chat", (channel, userstate, message, self) => {
 
     if (inMessage('!stime')) {
         var command = message.split(' ')[0];
-        var map = mapFunctions.ClosestsName(message.split(' ')[1]);
+        var map = ClosestsName(message.split(' ')[1]);
         var searchTerm = message.split(' ')[2];
         var index = message.split(' ')[2] - 0;
         if (!isNaN(searchTerm - 0)) {
@@ -171,13 +172,13 @@ client.on("chat", (channel, userstate, message, self) => {
     }
     if (inMessage('!swr')) {
         var command = message.split(' ')[0];
-        var map = mapFunctions.ClosestsName(message.split(' ')[1]);
+        var map = ClosestsName(message.split(' ')[1]);
         var index = message.split(' ')[2] - 0;
         MapTime(map, 'soldier', command, index);
     }
     if (inMessage('!dtime')) {
         var command = message.split(' ')[0];
-        var map = mapFunctions.ClosestsName(message.split(' ')[1]);
+        var map = ClosestsName(message.split(' ')[1]);
         var searchTerm = message.split(' ')[2];
         var index = message.split(' ')[2] - 0;
         if (!isNaN(searchTerm - 0)) {
@@ -189,41 +190,41 @@ client.on("chat", (channel, userstate, message, self) => {
     }
     if (inMessage('!dwr')) {
         var command = message.split(' ')[0];
-        var map = mapFunctions.ClosestsName(message.split(' ')[1]);
+        var map = ClosestsName(message.split(' ')[1]);
         var index = message.split(' ')[2] - 0;
         MapTime(map, 'demoman', command, index);
     }
     if (inMessage('!m') || inMessage('!mi')) {
-        var map = mapFunctions.ClosestsName(message.split(' ')[1]);
+        var map = ClosestsName(message.split(' ')[1]);
         MapInfo(map);
     }
     if (inMessage('!update') && userstate['user-id'] == 104466319) {
-        mapFunctions.UpdateMapNames();
+        UpdateMapNames();
     }
     if (inMessage('!sbtime')) {
         var command = message.split(' ')[0];
-        var map = mapFunctions.ClosestsName(message.split(' ')[1]);
+        var map = ClosestsName(message.split(' ')[1]);
         var index = message.split(' ')[2] - 0;
         var bonusIndex = message.split(' ')[3] - 0;
         BonusTime(command, map, 'soldier', index, bonusIndex)
     }
     if (inMessage('!dbtime')) {
         var command = message.split(' ')[0];
-        var map = mapFunctions.ClosestsName(message.split(' ')[1]);
+        var map = ClosestsName(message.split(' ')[1]);
         var index = message.split(' ')[2] - 0;
         var bonusIndex = message.split(' ')[3] - 0;
         BonusTime(command, map, 'soldier', index, bonusIndex)
     }
     if (inMessage('!sbwr')) {
         var command = message.split(' ')[0];
-        var map = mapFunctions.ClosestsName(message.split(' ')[1]);
+        var map = ClosestsName(message.split(' ')[1]);
         var index = message.split(' ')[2] - 0;
         var bonusIndex = message.split(' ')[3] - 0;
         BonusTime(command, map, 'soldier', index, bonusIndex)
     }
     if (inMessage('!dbwr')) {
         var command = message.split(' ')[0];
-        var map = mapFunctions.ClosestsName(message.split(' ')[1]);
+        var map = ClosestsName(message.split(' ')[1]);
         var index = message.split(' ')[2] - 0;
         var bonusIndex = message.split(' ')[3] - 0;
         BonusTime(command, map, 'soldier', index, bonusIndex)
