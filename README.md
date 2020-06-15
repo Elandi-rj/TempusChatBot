@@ -14,6 +14,7 @@
  !sbwr mapName <br>
  !dbwr mapName <br>
  !update (broadcaster only to update mapNames file any time new maps are added to tempus) <br>
+ !tempuscommands <br>
 
 # Examples
  !stime 4starters 3 <br>

@@ -114,10 +114,16 @@ client.on("chat", (channel, userstate, message, self) => {
                 var author = data.authors.length > 1 ? 'multiple authors' : data.authors[0].name;
                 var mapTiers = `Solly T${data.tier_info.soldier} | Demo T${data.tier_info.demoman}`;
                 var bonus = '';
-                if (data.zone_counts.bonus) {
-                    bonus = data.zone_counts.bonus > 1 ? ` | ${data.zone_counts.bonus} bonuses` : ` | 1 bonus`;
+                var course = '';
+                var courseData = data.zone_counts.course;
+                var bonusData = data.zone_counts.bonus;
+                if (bonusData) {
+                    bonus = bonusData > 1 ? ` | ${bonusData} bonuses` : ` | 1 bonus`;
                 }
-                client.say(channel, `${mapName} by ${author}, ${mapTiers}${bonus}`);
+                if (courseData) {
+                    course = courseData > 1 ? ` | ${courseData} courses` : ` | 1 course`;
+                }
+                client.say(channel, `${mapName} by ${author}, ${mapTiers}${course}${bonus}`);
             })
             .catch(function (error) {
                 // handle error
@@ -228,6 +234,9 @@ client.on("chat", (channel, userstate, message, self) => {
         var index = message.split(' ')[2] - 0;
         var bonusIndex = message.split(' ')[3] - 0;
         BonusTime(command, map, 'demoman', index, bonusIndex)
+    }
+    if (inMessage('!tempuscommands')) {
+        client.say(channel, 'https://github.com/Elandi-rj/TempusChatBot/blob/master/README.md');
     }
     //https://tempus.xyz/api/players/id/170674/rank
 });
