@@ -1,54 +1,41 @@
 const tmi = require("tmi.js");
 const options = require("./options"); //Your options file
 const axios = require('axios');
-const ClosestsName = require('./MapFunctions.js').ClosestsName;
-const UpdateMapNames = require('./MapFunctions.js').UpdateMapNames;
+const ClosestsName = require('./utilities.js').ClosestsName;
+const UpdateMapNames = require('./utilities.js').UpdateMapNames;
+const secondsToTimeFormat = require('./utilities.js').secondsToTimeFormat;
 const findPlayer = require('./players');
-//Connect to twitch server
+
 const client = new tmi.client(options);
 client.connect();
 
-//on chat
 client.on("chat", (channel, userstate, message, self) => {
     //channel is which channel it comes from. Not very usable if you are in one channel only.
     //Userstate is an object which contains a lot of information, if the user who wrote is a subscriber, what emotes he used etc.
     //message is the message itself.
     //self is your bot. 
-    function inMessage(msg) {
-        return message.split(' ')[0].toLowerCase().includes(msg);
+    function CommandIs(msg) {
+        return message.split(' ')[0].toLowerCase() === msg;
     }
-    function secondsToTimeFormat(time) {
-        // Hours, minutes and seconds
-        var hrs = ~~(time / 3600);
-        var mins = ~~((time % 3600) / 60);
-        var secs = (time % 60).toFixed(2);
-
-        // Output like "1:01" or "4:03:59" or "123:03:59"
-        var ret = "";
-
-        if (hrs > 0) {
-            ret += "" + hrs + ":" + (mins < 10 ? "0" : "");
-        }
-
-        ret += "" + mins + ":" + (secs < 10 ? "0" : "");
-        ret += "" + secs;
-        return ret;
-    }
-    function MapTime(map, classResponse, command, index) {
+    function SearchTime(map, classResponse, command, index, zoneType, zoneIndex) {
         if (command === '!swr' || command === '!dwr') { index = 1; }
         if (index < 1 || isNaN(index)) { index = 1; }
+        if (zoneIndex < 1 || isNaN(zoneIndex)) { zoneIndex = 1; }
         if (command === '!dwr' || command === '!swr') { index = 1; }
 
-        //var query = `https://tempus.xyz/api/maps/name/${map}/zones/typeindex/map/1/records/list?limit=${index}`
-        var query = `https://tempus.xyz/api/maps/name/${map}/zones/typeindex/map/1/records/list?start=${index}&limit=1`
+        var query = `https://tempus.xyz/api/maps/name/${map}/zones/typeindex/${zoneType}/${zoneIndex}/records/list?start=${index}&limit=1`
         console.log(query);
         axios.get(query)
             .then(function (response) {
                 var data = response.data.results[classResponse][0]
                 if (data) {
                     var time = secondsToTimeFormat(data.duration);
+                    var zoneInfo = '';
+                    if (zoneType != 'map') {
+                        zoneInfo = ` ${zoneType} ${zoneIndex}`;
+                    }
                     //Tempus | (Solly) Boshy is ranked 2/47 on jump_rabbit_final3 with time: 10:48.06
-                    client.say(channel, `(${classResponse == 'soldier' ? 'Solly' : 'Demo'}) ${data.name} is ranked ${index} on ${map} with time: ${time}`);
+                    client.say(channel, `(${classResponse == 'soldier' ? 'Solly' : 'Demo'}) ${data.name} is ranked ${index} on ${map}${zoneInfo} with time: ${time}`);
                 }
                 else {
                     client.say(channel, `No time was found`);
@@ -59,26 +46,25 @@ client.on("chat", (channel, userstate, message, self) => {
                 client.say(channel, error.response.data.error);
             })
     }
-    function SearchPlayerAndTime(map, searchTerm, classResponse) {
+    function SearchPlayerAndTime(map, searchTerm, classResponse, zoneType, zoneIndex) {
         var playerQuery = `https://tempus.xyz/api/search/playersAndMaps/${searchTerm}`;
         console.log(playerQuery);
         axios.get(playerQuery)
             .then(function (response) {
                 var player = response.data.players[0];
                 if (player) {
-                    SearchTimeWithPlayer(player, classResponse, map)
+                    SearchTimeWithPlayer(player, classResponse, map, zoneType, zoneIndex)
                 }
                 else {
                     client.say(channel, `No person was found`);
                 }
             })
             .catch(function (error) {
-                // handle error
                 client.say(channel, error.response.data.error);
             })
     }
-    function SearchTimeWithPlayer(player, classResponse, map) {
-        var query = `https://tempus.xyz/api/maps/name/${map}/zones/typeindex/map/1/records/list?limit=0`
+    function SearchTimeWithPlayer(player, classResponse, map, zoneType, zoneIndex) {
+        var query = `https://tempus.xyz/api/maps/name/${map}/zones/typeindex/${zoneType}/${zoneIndex}/records/list?limit=0`
         console.log(query);
 
         axios.get(query)
@@ -94,7 +80,7 @@ client.on("chat", (channel, userstate, message, self) => {
                 });
                 if (data) {
                     var time = secondsToTimeFormat(data.duration);
-                    client.say(channel, `(${classResponse == 'soldier' ? 'Solly' : 'Demo'}) ${data.name} is ranked ${rankIndex}/${timesLength} on ${map} with time: ${time}`);
+                    client.say(channel, `(${classResponse == 'soldier' ? 'Solly' : 'Demo'}) ${data.name} is ranked ${rankIndex}/${timesLength} on ${map} ${zoneType} ${zoneIndex} with time: ${time}`);
                 }
                 else {
                     client.say(channel, 'no time found');
@@ -170,78 +156,131 @@ client.on("chat", (channel, userstate, message, self) => {
 
     if (self) return;
 
-    if (inMessage('!stime')) {
+    if (CommandIs('!stime')) {
         var command = message.split(' ')[0];
         var map = ClosestsName(message.split(' ')[1]);
         var searchTerm = message.split(' ').slice(2).join(' ');
         var index = message.split(' ')[2] - 0;
         if (!isNaN(searchTerm - 0)) {
-            MapTime(map, 'soldier', command, index);
+            SearchTime(map, 'soldier', command, index, 'map', 1);
         }
         else {
-            SearchPlayerAndTime(map, searchTerm, 'soldier');
+            SearchPlayerAndTime(map, searchTerm, 'soldier', 'map', 1);
         }
     }
-    if (inMessage('!swr')) {
+    if (CommandIs('!swr')) {
         var command = message.split(' ')[0];
         var map = ClosestsName(message.split(' ')[1]);
         var index = message.split(' ')[2] - 0;
-        MapTime(map, 'soldier', command, index);
+        SearchTime(map, 'soldier', command, index, 'map', 1);
     }
-    if (inMessage('!dtime')) {
+    if (CommandIs('!dtime')) {
         var command = message.split(' ')[0];
         var map = ClosestsName(message.split(' ')[1]);
         var searchTerm = message.split(' ').slice(2).join(' ');
         var index = message.split(' ')[2] - 0;
         if (!isNaN(searchTerm - 0)) {
-            MapTime(map, 'demoman', command, index);
+            SearchTime(map, 'demoman', command, index, 'map', 1);
         }
         else {
-            SearchPlayerAndTime(map, searchTerm, 'demoman');
+            SearchPlayerAndTime(map, searchTerm, 'demoman', 'map', 1);
         }
     }
-    if (inMessage('!dwr')) {
+    if (CommandIs('!dwr')) {
         var command = message.split(' ')[0];
         var map = ClosestsName(message.split(' ')[1]);
         var index = message.split(' ')[2] - 0;
-        MapTime(map, 'demoman', command, index);
+        SearchTime(map, 'demoman', command, index, 'map', 1);
     }
-    if (inMessage('!m') || inMessage('!mi')) {
+    if (CommandIs('!m') || CommandIs('!mi')) {
         var map = ClosestsName(message.split(' ')[1]);
-        MapInfo(map);
+        if (map) {
+            MapInfo(map);
+        }
+        else {
+            client.say(channel, 'Map not found.');
+        }
     }
-    if (inMessage('!update') && userstate['user-id'] == 104466319) {
+    if (CommandIs('!update') && userstate['user-id'] == 104466319) {
         UpdateMapNames();
     }
-    if (inMessage('!sbtime')) {
+    if (CommandIs('!sbtime')) {
         var command = message.split(' ')[0];
         var map = ClosestsName(message.split(' ')[1]);
         var index = message.split(' ')[2] - 0;
-        var bonusIndex = message.split(' ')[3] - 0;
-        BonusTime(command, map, 'soldier', index, bonusIndex)
+        var zoneIndex = message.split(' ')[3] - 0;
+        var searchTerm = message.split(' ').slice(3).join(' ');
+        if (!isNaN(searchTerm - 0)) {
+            SearchTime(map, 'soldier', command, index, 'bonus', zoneIndex)
+        }
+        else {
+            SearchPlayerAndTime(map, searchTerm, 'soldier', 'bonus', index);
+        }
     }
-    if (inMessage('!dbtime')) {
+    if (CommandIs('!sctime')) {
         var command = message.split(' ')[0];
         var map = ClosestsName(message.split(' ')[1]);
         var index = message.split(' ')[2] - 0;
-        var bonusIndex = message.split(' ')[3] - 0;
-        BonusTime(command, map, 'demoman', index, bonusIndex)
+        var zoneIndex = message.split(' ')[3] - 0;
+        var searchTerm = message.split(' ').slice(3).join(' ');
+        if (!isNaN(searchTerm - 0)) {
+            SearchTime(map, 'soldier', command, index, 'course', zoneIndex)
+        }
+        else {
+            SearchPlayerAndTime(map, searchTerm, 'soldier', 'course', index);
+        }
     }
-    if (inMessage('!sbwr')) {
+    if (CommandIs('!dctime')) {
         var command = message.split(' ')[0];
         var map = ClosestsName(message.split(' ')[1]);
         var index = message.split(' ')[2] - 0;
-        var bonusIndex = message.split(' ')[3] - 0;
-        BonusTime(command, map, 'soldier', index, bonusIndex)
+        var zoneIndex = message.split(' ')[3] - 0;
+        var searchTerm = message.split(' ').slice(3).join(' ');
+        if (!isNaN(searchTerm - 0)) {
+            SearchTime(map, 'demoman', command, index, 'course', zoneIndex)
+        }
+        else {
+            SearchPlayerAndTime(map, searchTerm, 'demoman', 'course', index);
+        }
     }
-    if (inMessage('!dbwr')) {
+    if (CommandIs('!dbtime')) {
         var command = message.split(' ')[0];
         var map = ClosestsName(message.split(' ')[1]);
         var index = message.split(' ')[2] - 0;
-        var bonusIndex = message.split(' ')[3] - 0;
-        BonusTime(command, map, 'demoman', index, bonusIndex)
+        var zoneIndex = message.split(' ')[3] - 0;
+        var searchTerm = message.split(' ').slice(3).join(' ');
+        if (!isNaN(searchTerm - 0)) {
+            SearchTime(map, 'demoman', command, index, 'bonus', zoneIndex)
+        }
+        else {
+            SearchPlayerAndTime(map, searchTerm, 'demoman', 'bonus', index);
+        }
     }
-    if (inMessage('!tempuscommands')) {
+    if (CommandIs('!sbwr')) {
+        var command = message.split(' ')[0];
+        var map = ClosestsName(message.split(' ')[1]);
+        var zoneIndex = message.split(' ')[2] - 0;
+        SearchTime(map, 'soldier', command, 1, 'bonus', zoneIndex)
+    }
+    if (CommandIs('!scwr')) {
+        var command = message.split(' ')[0];
+        var map = ClosestsName(message.split(' ')[1]);
+        var zoneIndex = message.split(' ')[2] - 0;
+        SearchTime(map, 'soldier', command, 1, 'course', zoneIndex)
+    }
+    if (CommandIs('!dbwr')) {
+        var command = message.split(' ')[0];
+        var map = ClosestsName(message.split(' ')[1]);
+        var zoneIndex = message.split(' ')[2] - 0;
+        SearchTime(map, 'demoman', command, 1, 'bonus', zoneIndex)
+    }
+    if (CommandIs('!dcwr')) {
+        var command = message.split(' ')[0];
+        var map = ClosestsName(message.split(' ')[1]);
+        var zoneIndex = message.split(' ')[2] - 0;
+        SearchTime(map, 'demoman', command, 1, 'course', zoneIndex)
+    }
+    if (CommandIs('!tempuscommands')) {
         client.say(channel, 'https://github.com/Elandi-rj/TempusChatBot/blob/master/README.md');
     }
     //https://tempus.xyz/api/players/id/170674/rank

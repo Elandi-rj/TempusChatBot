@@ -1,3 +1,4 @@
+const mapNames = require('./MapNames').list;
 function UpdateMapNames() {
     var query = 'https://tempus.xyz/api/maps/detailedList';
     const axios = require('axios');
@@ -12,12 +13,10 @@ function UpdateMapNames() {
             console.log('Map list has been updated!');
         })
         .catch(function (error) {
-            // handle error
             console.log(error.response.data.error);
         })
 }
 function ClosestsName(queryName) {
-    var mapNames = require('./MapNames').list;
     var foundMap;
     try {
         var mapRegex = new RegExp(queryName, "g");
@@ -32,6 +31,23 @@ function ClosestsName(queryName) {
     }
     return foundMap;
 }
+function secondsToTimeFormat(time) {
+    // Hours, minutes and seconds
+    var hrs = ~~(time / 3600);
+    var mins = ~~((time % 3600) / 60);
+    var secs = (time % 60).toFixed(2);
 
+    // Output like "1:01" or "4:03:59" or "123:03:59"
+    var ret = "";
+
+    if (hrs > 0) {
+        ret += "" + hrs + ":" + (mins < 10 ? "0" : "");
+    }
+
+    ret += "" + mins + ":" + (secs < 10 ? "0" : "");
+    ret += "" + secs;
+    return ret;
+}
 exports.ClosestsName = ClosestsName;
 exports.UpdateMapNames = UpdateMapNames;
+exports.secondsToTimeFormat = secondsToTimeFormat;
