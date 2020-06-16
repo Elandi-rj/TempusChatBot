@@ -24,7 +24,7 @@
  output: (Solly) Boshy is ranked 1 on jump_vex_final with time: 2:23.97 <br>
  !m simplified <br>
  output: jump_simplified_rc1 by Niirvash, Solly T4 | Demo T4 <br>
- !sbtime simply <br>
+ !sbtime simply 1 <br>
  output: (Solly) Boshy is ranked 1 on jump_simply_v2 bonus 1 with time: 0:07.77 <br>
  !sbtime simply steve <br>
  output: (Solly) steve is ranked 11/49 on jump_simply_v2 bonus 1 with time: 0:08.99 <br>
