@@ -83,7 +83,11 @@ client.on("chat", (channel, userstate, message, self) => {
                 });
                 if (data) {
                     var time = secondsToTimeFormat(data.duration);
-                    client.say(channel, `(${classResponse == 'soldier' ? 'Solly' : 'Demo'}) ${data.name} is ranked ${rankIndex}/${timesLength} on ${map} ${zoneType} ${zoneIndex} with time: ${time}`);
+                    var zoneInfo = '';
+                    if (zoneType != 'map') {
+                        zoneInfo = ` ${zoneType} ${zoneIndex}`;
+                    }
+                    client.say(channel, `(${classResponse == 'soldier' ? 'Solly' : 'Demo'}) ${data.name} is ranked ${rankIndex}/${timesLength} on ${map}${zoneInfo} with time: ${time}`);
                 }
                 else {
                     client.say(channel, 'No time found');
@@ -132,7 +136,7 @@ client.on("chat", (channel, userstate, message, self) => {
     // maybe add !recent https://tempus.xyz/api/activity
     // !voteparty
 
-    function SearchPlayerOrTerm(command, map, searchTerm, index, classResponse, zoneType, zoneIndex) {
+    function PlayerOrTimeSearch(command, map, searchTerm, index, classResponse, zoneType, zoneIndex) {
         if (!isNaN(searchTerm - 0)) {
             SearchTime(map, classResponse, command, index, zoneType, zoneIndex);
         }
@@ -146,7 +150,7 @@ client.on("chat", (channel, userstate, message, self) => {
         var searchTerm = message.split(' ').slice(2).join(' ');
         var index = message.split(' ')[2] - 0;
         var classResponse = CommandIs('!stime') ? 'soldier' : 'demoman';
-        SearchPlayerOrTerm(command, map, searchTerm, index, classResponse, 'map', 1)
+        PlayerOrTimeSearch(command, map, searchTerm, index, classResponse, 'map', 1)
     }
     if (CommandIs('!swr') || CommandIs('!dwr')) {
         var map = ClosestsName(commandMap);
@@ -160,7 +164,7 @@ client.on("chat", (channel, userstate, message, self) => {
         var searchTerm = message.split(' ').slice(3).join(' ');
         var zoneIndex = isNaN(searchTerm) ? message.split(' ')[2] - 0 : message.split(' ')[3];
         var classResponse = CommandIs('!sbtime') ? 'soldier' : 'demoman';
-        SearchPlayerOrTerm(command, map, searchTerm, index, classResponse, 'bonus', zoneIndex)
+        PlayerOrTimeSearch(command, map, searchTerm, index, classResponse, 'bonus', zoneIndex)
     }
     if (CommandIs('!sbwr') || CommandIs('!dbwr')) {
         var map = ClosestsName(commandMap);
@@ -174,7 +178,7 @@ client.on("chat", (channel, userstate, message, self) => {
         var searchTerm = message.split(' ').slice(3).join(' ');
         var zoneIndex = isNaN(searchTerm) ? message.split(' ')[2] - 0 : message.split(' ')[3];
         var classResponse = CommandIs('!sctime') ? 'soldier' : 'demoman';
-        SearchPlayerOrTerm(command, map, searchTerm, index, classResponse, 'course', zoneIndex)
+        PlayerOrTimeSearch(command, map, searchTerm, index, classResponse, 'course', zoneIndex)
     }
     if (CommandIs('!scwr') || CommandIs('!dcwr')) {
         var map = ClosestsName(commandMap);

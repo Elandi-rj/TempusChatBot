@@ -31,6 +31,6 @@
  !sbwr simply <br>
  output: (Solly) Boshy is ranked 1 on jump_simply_v2 bonus 1 with time: 0:07.77 <br>
  !scwr 4starters 3 <br>
- output: (Solly) flightreacts is the GOAT is ranked 1 on jump_4starters_rc1 course 3 with time: 0:53.41
+ output: (Solly) flightreacts is the GOAT is ranked 1 on jump_4starters_rc1 course 3 with time: 0:53.41 <br>
  !sctime 4starters steve <br>
  output: (Solly) steve is ranked 124/1295 on jump_4starters_rc1 course 5 with time: 2:55.85 <br>
