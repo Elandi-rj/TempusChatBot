@@ -14,14 +14,17 @@ client.on("chat", (channel, userstate, message, self) => {
     //Userstate is an object which contains a lot of information, if the user who wrote is a subscriber, what emotes he used etc.
     //message is the message itself.
     //self is your bot. 
+    if (self) return;
+
+    var command = message.split(' ')[0];
+    var commandMap = message.split(' ')[1];
     function CommandIs(msg) {
-        return message.split(' ')[0].toLowerCase() === msg;
+        return command === msg;
     }
     function SearchTime(map, classResponse, command, index, zoneType, zoneIndex) {
         if (command === '!swr' || command === '!dwr') { index = 1; }
         if (index < 1 || isNaN(index)) { index = 1; }
         if (zoneIndex < 1 || isNaN(zoneIndex)) { zoneIndex = 1; }
-        if (command === '!dwr' || command === '!swr') { index = 1; }
 
         var query = `https://tempus.xyz/api/maps/name/${map}/zones/typeindex/${zoneType}/${zoneIndex}/records/list?start=${index}&limit=1`
         console.log(query);
@@ -83,7 +86,7 @@ client.on("chat", (channel, userstate, message, self) => {
                     client.say(channel, `(${classResponse == 'soldier' ? 'Solly' : 'Demo'}) ${data.name} is ranked ${rankIndex}/${timesLength} on ${map} ${zoneType} ${zoneIndex} with time: ${time}`);
                 }
                 else {
-                    client.say(channel, 'no time found');
+                    client.say(channel, 'No time found');
                 }
 
             })
@@ -120,32 +123,6 @@ client.on("chat", (channel, userstate, message, self) => {
                 client.say(channel, error.response.data.error);
             })
     }
-    function BonusTime(command, map, classResponse, index, bonusIndex) {
-        if (index < 1 || isNaN(index)) { index = 1; }
-        if (bonusIndex < 1 || isNaN(bonusIndex)) { bonusIndex = 1; }
-        if (command === '!dbwr' || command === '!sbwr') { index = 1; }
-
-        //var query = `https://tempus.xyz/api/maps/name/${map}/zones/typeindex/bonus/${bonusIndex}/records/list?limit=${index}`;
-        var query = `https://tempus.xyz/api/maps/name/${map}/zones/typeindex/bonus/${bonusIndex}/records/list?start=${index}&limit=1`
-        console.log(query);
-        axios.get(query)
-            .then(function (response) {
-                var data = response.data.results[classResponse][0];
-                if (data) {
-                    var time = secondsToTimeFormat(data.duration);
-                    //Tempus | (Solly) Boshy is ranked 2/47 on jump_rabbit_final3 with time: 10:48.06
-                    client.say(channel, `(${classResponse == 'soldier' ? 'Solly' : 'Demo'}) ${data.name} is ranked ${index} on ${map} bonus ${response.data.zone_info.zoneindex} with time: ${time}`);
-                }
-                else {
-                    client.say(channel, `No time was found`);
-                }
-
-            })
-            .catch(function (error) {
-                // handle error
-                client.say(channel, error.response.data.error);
-            })
-    }
     //todo add player.js feature back
     // add !playerinfo function for ranks and such
     // !srank 20
@@ -153,47 +130,63 @@ client.on("chat", (channel, userstate, message, self) => {
     // !demo maybe
     // add !svid
     // maybe add !recent https://tempus.xyz/api/activity
+    // !voteparty
 
-    if (self) return;
-
-    if (CommandIs('!stime')) {
-        var command = message.split(' ')[0];
-        var map = ClosestsName(message.split(' ')[1]);
-        var searchTerm = message.split(' ').slice(2).join(' ');
-        var index = message.split(' ')[2] - 0;
+    function SearchPlayerOrTerm(command, map, searchTerm, index, classResponse, zoneType, zoneIndex) {
         if (!isNaN(searchTerm - 0)) {
-            SearchTime(map, 'soldier', command, index, 'map', 1);
+            SearchTime(map, classResponse, command, index, zoneType, zoneIndex);
         }
         else {
-            SearchPlayerAndTime(map, searchTerm, 'soldier', 'map', 1);
+            SearchPlayerAndTime(map, searchTerm, classResponse, zoneType, zoneIndex);
         }
     }
-    if (CommandIs('!swr')) {
-        var command = message.split(' ')[0];
-        var map = ClosestsName(message.split(' ')[1]);
-        var index = message.split(' ')[2] - 0;
-        SearchTime(map, 'soldier', command, index, 'map', 1);
-    }
-    if (CommandIs('!dtime')) {
-        var command = message.split(' ')[0];
-        var map = ClosestsName(message.split(' ')[1]);
+
+    if (CommandIs('!stime') || CommandIs('!dtime')) {
+        var map = ClosestsName(commandMap);
         var searchTerm = message.split(' ').slice(2).join(' ');
         var index = message.split(' ')[2] - 0;
-        if (!isNaN(searchTerm - 0)) {
-            SearchTime(map, 'demoman', command, index, 'map', 1);
-        }
-        else {
-            SearchPlayerAndTime(map, searchTerm, 'demoman', 'map', 1);
-        }
+        var classResponse = CommandIs('!stime') ? 'soldier' : 'demoman';
+        SearchPlayerOrTerm(command, map, searchTerm, index, classResponse, 'map', 1)
     }
-    if (CommandIs('!dwr')) {
-        var command = message.split(' ')[0];
-        var map = ClosestsName(message.split(' ')[1]);
+    if (CommandIs('!swr') || CommandIs('!dwr')) {
+        var map = ClosestsName(commandMap);
         var index = message.split(' ')[2] - 0;
-        SearchTime(map, 'demoman', command, index, 'map', 1);
+        var classResponse = CommandIs('!swr') ? 'soldier' : 'demoman';
+        SearchTime(map, classResponse, command, index, 'map', 1);
+    }
+    if (CommandIs('!sbtime') || CommandIs('!dbtime')) {
+        var map = ClosestsName(commandMap);
+        var index = message.split(' ')[2] - 0;
+        var searchTerm = message.split(' ').slice(3).join(' ');
+        var zoneIndex = isNaN(searchTerm) ? message.split(' ')[2] - 0 : message.split(' ')[3];
+        var classResponse = CommandIs('!sbtime') ? 'soldier' : 'demoman';
+        SearchPlayerOrTerm(command, map, searchTerm, index, classResponse, 'bonus', zoneIndex)
+    }
+    if (CommandIs('!sbwr') || CommandIs('!dbwr')) {
+        var map = ClosestsName(commandMap);
+        var zoneIndex = message.split(' ')[2] - 0;
+        var classResponse = CommandIs('!sbwr') ? 'soldier' : 'demoman';
+        SearchTime(map, classResponse, command, 1, 'bonus', zoneIndex)
+    }
+    if (CommandIs('!sctime') || CommandIs('!dctime')) {
+        var map = ClosestsName(commandMap);
+        var index = message.split(' ')[2] - 0;
+        var searchTerm = message.split(' ').slice(3).join(' ');
+        var zoneIndex = isNaN(searchTerm) ? message.split(' ')[2] - 0 : message.split(' ')[3];
+        var classResponse = CommandIs('!sctime') ? 'soldier' : 'demoman';
+        SearchPlayerOrTerm(command, map, searchTerm, index, classResponse, 'course', zoneIndex)
+    }
+    if (CommandIs('!scwr') || CommandIs('!dcwr')) {
+        var map = ClosestsName(commandMap);
+        var zoneIndex = message.split(' ')[2] - 0;
+        var classResponse = CommandIs('!scwr') ? 'soldier' : 'demoman';
+        SearchTime(map, classResponse, command, 1, 'course', zoneIndex)
+    }
+    if (CommandIs('!tempuscommands')) {
+        client.say(channel, 'https://github.com/Elandi-rj/TempusChatBot/blob/master/README.md');
     }
     if (CommandIs('!m') || CommandIs('!mi')) {
-        var map = ClosestsName(message.split(' ')[1]);
+        var map = ClosestsName(commandMap);
         if (map) {
             MapInfo(map);
         }
@@ -203,85 +196,6 @@ client.on("chat", (channel, userstate, message, self) => {
     }
     if (CommandIs('!update') && userstate['user-id'] == 104466319) {
         UpdateMapNames();
-    }
-    if (CommandIs('!sbtime')) {
-        var command = message.split(' ')[0];
-        var map = ClosestsName(message.split(' ')[1]);
-        var index = message.split(' ')[2] - 0;
-        var zoneIndex = message.split(' ')[3] - 0;
-        var searchTerm = message.split(' ').slice(3).join(' ');
-        if (!isNaN(searchTerm - 0)) {
-            SearchTime(map, 'soldier', command, index, 'bonus', zoneIndex)
-        }
-        else {
-            SearchPlayerAndTime(map, searchTerm, 'soldier', 'bonus', index);
-        }
-    }
-    if (CommandIs('!sctime')) {
-        var command = message.split(' ')[0];
-        var map = ClosestsName(message.split(' ')[1]);
-        var index = message.split(' ')[2] - 0;
-        var zoneIndex = message.split(' ')[3] - 0;
-        var searchTerm = message.split(' ').slice(3).join(' ');
-        if (!isNaN(searchTerm - 0)) {
-            SearchTime(map, 'soldier', command, index, 'course', zoneIndex)
-        }
-        else {
-            SearchPlayerAndTime(map, searchTerm, 'soldier', 'course', index);
-        }
-    }
-    if (CommandIs('!dctime')) {
-        var command = message.split(' ')[0];
-        var map = ClosestsName(message.split(' ')[1]);
-        var index = message.split(' ')[2] - 0;
-        var zoneIndex = message.split(' ')[3] - 0;
-        var searchTerm = message.split(' ').slice(3).join(' ');
-        if (!isNaN(searchTerm - 0)) {
-            SearchTime(map, 'demoman', command, index, 'course', zoneIndex)
-        }
-        else {
-            SearchPlayerAndTime(map, searchTerm, 'demoman', 'course', index);
-        }
-    }
-    if (CommandIs('!dbtime')) {
-        var command = message.split(' ')[0];
-        var map = ClosestsName(message.split(' ')[1]);
-        var index = message.split(' ')[2] - 0;
-        var zoneIndex = message.split(' ')[3] - 0;
-        var searchTerm = message.split(' ').slice(3).join(' ');
-        if (!isNaN(searchTerm - 0)) {
-            SearchTime(map, 'demoman', command, index, 'bonus', zoneIndex)
-        }
-        else {
-            SearchPlayerAndTime(map, searchTerm, 'demoman', 'bonus', index);
-        }
-    }
-    if (CommandIs('!sbwr')) {
-        var command = message.split(' ')[0];
-        var map = ClosestsName(message.split(' ')[1]);
-        var zoneIndex = message.split(' ')[2] - 0;
-        SearchTime(map, 'soldier', command, 1, 'bonus', zoneIndex)
-    }
-    if (CommandIs('!scwr')) {
-        var command = message.split(' ')[0];
-        var map = ClosestsName(message.split(' ')[1]);
-        var zoneIndex = message.split(' ')[2] - 0;
-        SearchTime(map, 'soldier', command, 1, 'course', zoneIndex)
-    }
-    if (CommandIs('!dbwr')) {
-        var command = message.split(' ')[0];
-        var map = ClosestsName(message.split(' ')[1]);
-        var zoneIndex = message.split(' ')[2] - 0;
-        SearchTime(map, 'demoman', command, 1, 'bonus', zoneIndex)
-    }
-    if (CommandIs('!dcwr')) {
-        var command = message.split(' ')[0];
-        var map = ClosestsName(message.split(' ')[1]);
-        var zoneIndex = message.split(' ')[2] - 0;
-        SearchTime(map, 'demoman', command, 1, 'course', zoneIndex)
-    }
-    if (CommandIs('!tempuscommands')) {
-        client.say(channel, 'https://github.com/Elandi-rj/TempusChatBot/blob/master/README.md');
     }
     //https://tempus.xyz/api/players/id/170674/rank
 });
