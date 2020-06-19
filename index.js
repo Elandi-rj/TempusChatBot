@@ -22,7 +22,6 @@ client.on("chat", (channel, userstate, message, self) => {
         return command === msg;
     }
     function SearchTime(map, classResponse, command, index, zoneType, zoneIndex) {
-        if (command === '!swr' || command === '!dwr') { index = 1; }
         if (index < 1 || isNaN(index)) { index = 1; }
         if (zoneIndex < 1 || isNaN(zoneIndex)) { zoneIndex = 1; }
 
@@ -160,9 +159,9 @@ client.on("chat", (channel, userstate, message, self) => {
     }
     if (CommandIs('!sbtime') || CommandIs('!dbtime')) {
         var map = ClosestsName(commandMap);
-        var index = message.split(' ')[2] - 0;
+        var index = message.split(' ')[3] - 0;
         var searchTerm = message.split(' ').slice(3).join(' ');
-        var zoneIndex = isNaN(searchTerm) ? message.split(' ')[2] - 0 : message.split(' ')[3];
+        var zoneIndex = message.split(' ')[2];
         var classResponse = CommandIs('!sbtime') ? 'soldier' : 'demoman';
         PlayerOrTimeSearch(command, map, searchTerm, index, classResponse, 'bonus', zoneIndex)
     }
@@ -174,9 +173,9 @@ client.on("chat", (channel, userstate, message, self) => {
     }
     if (CommandIs('!sctime') || CommandIs('!dctime')) {
         var map = ClosestsName(commandMap);
-        var index = message.split(' ')[2] - 0;
+        var index = message.split(' ')[3] - 0;
         var searchTerm = message.split(' ').slice(3).join(' ');
-        var zoneIndex = isNaN(searchTerm) ? message.split(' ')[2] - 0 : message.split(' ')[3];
+        var zoneIndex = message.split(' ')[2];
         var classResponse = CommandIs('!sctime') ? 'soldier' : 'demoman';
         PlayerOrTimeSearch(command, map, searchTerm, index, classResponse, 'course', zoneIndex)
     }
