@@ -189,13 +189,19 @@ client.on("chat", (channel, userstate, message, self) => {
         client.say(channel, 'https://github.com/Elandi-rj/TempusChatBot/blob/master/README.md');
     }
     if (CommandIs('!m') || CommandIs('!mi')) {
-        var map = ClosestsName(commandMap);
-        if (map) {
-            MapInfo(map);
+        if (commandMap === 'p' || commandMap === 'jump_p') { //stop naming your maps with letters ;/
+            client.say(channel, 'jump_p by bshear, Solly T5 | Demo T5 | 1 bonus');
         }
         else {
-            client.say(channel, 'Map not found.');
+            var map = ClosestsName(commandMap);
+            if (map) {
+                MapInfo(map);
+            }
+            else {
+                client.say(channel, 'Map not found.');
+            }
         }
+
     }
     if (CommandIs('!update') && userstate['user-id'] == 104466319) {
         UpdateMapNames();
