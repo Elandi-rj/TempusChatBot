@@ -6,7 +6,7 @@ function UpdateMapNames() {
         .then(function (response) {
             var maps = [];
             response.data.forEach(element => {
-                maps.push(element.name.replace('jump_', '').replace('rj_', ''));
+                maps.push(element.name);
             });
             var fs = require('fs');
             fs.writeFileSync('MapNames.js', 'exports.list =' + JSON.stringify(maps));
@@ -19,7 +19,7 @@ function UpdateMapNames() {
 function ClosestsName(queryName) {
     var foundMap;
     try {
-        var mapRegex = new RegExp('^' + queryName.replace('jump_', ''), "g");
+        var mapRegex = new RegExp(queryName, "g");
         for (let i = 0; i < mapNames.length; i++) {
             if (mapNames[i].match(mapRegex)) {
                 foundMap = mapNames[i];
@@ -29,7 +29,7 @@ function ClosestsName(queryName) {
     } catch (error) {
         console.log(error);
     }
-    return 'jump_' + foundMap;
+    return foundMap;
 }
 function secondsToTimeFormat(time) {
     // Hours, minutes and seconds
