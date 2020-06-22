@@ -40,7 +40,7 @@ client.on("chat", (channel, userstate, message, self) => {
                     client.say(channel, `(${classResponse == 'soldier' ? 'Solly' : 'Demo'}) ${data.name} is ranked ${index} on ${map}${zoneInfo} with time: ${time}`);
                 }
                 else {
-                    client.say(channel, `No time was found`);
+                    client.say(channel, `No record found`);
                 }
             })
             .catch(function (error) {
@@ -89,7 +89,7 @@ client.on("chat", (channel, userstate, message, self) => {
                     client.say(channel, `(${classResponse == 'soldier' ? 'Solly' : 'Demo'}) ${data.name} is ranked ${rankIndex}/${timesLength} on ${map}${zoneInfo} with time: ${time}`);
                 }
                 else {
-                    client.say(channel, 'No time found');
+                    client.say(channel, 'No record found');
                 }
 
             })
@@ -203,7 +203,7 @@ client.on("chat", (channel, userstate, message, self) => {
         }
 
     }
-    if (CommandIs('!update') && userstate['user-id'] == 104466319) {
+    if (CommandIs('!update') && userstate.badges.broadcaster) {
         UpdateMapNames();
     }
     //https://tempus.xyz/api/players/id/170674/rank
