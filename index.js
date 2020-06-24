@@ -48,22 +48,17 @@ client.on("chat", (channel, userstate, message, self) => {
                 client.say(channel, error.response.data.error);
             })
     }
-    function SearchPlayerAndTime(map, searchTerm, classResponse, zoneType, zoneIndex) {
+    async function SearchPlayer(searchTerm) {
         var playerQuery = `https://tempus.xyz/api/search/playersAndMaps/${searchTerm}`;
         console.log(playerQuery);
-        axios.get(playerQuery)
-            .then(function (response) {
-                var player = response.data.players[0];
-                if (player) {
-                    SearchTimeWithPlayer(player, classResponse, map, zoneType, zoneIndex)
-                }
-                else {
-                    client.say(channel, `No person was found`);
-                }
+        return await axios.get(playerQuery)
+            .then(p => {
+                return p.data.players[0];
             })
-            .catch(function (error) {
-                client.say(channel, error.response.data.error);
-            })
+            .catch(error => {
+                console.log(error.response.data.error);
+                throw error;
+            });
     }
     function SearchTimeWithPlayer(player, classResponse, map, zoneType, zoneIndex) {
         var query = `https://tempus.xyz/api/maps/name/${map}/zones/typeindex/${zoneType}/${zoneIndex}/records/list?limit=0`
@@ -140,7 +135,15 @@ client.on("chat", (channel, userstate, message, self) => {
             SearchTime(map, classResponse, command, index, zoneType, zoneIndex);
         }
         else {
-            SearchPlayerAndTime(map, searchTerm, classResponse, zoneType, zoneIndex);
+            SearchPlayer(searchTerm)
+                .then(player => {
+                    if (player) {
+                        SearchTimeWithPlayer(player, classResponse, map, zoneType, zoneIndex);
+                    }
+                    else {
+                        client.say(channel, 'No person was found')
+                    }
+                });
         }
     }
 
@@ -201,7 +204,6 @@ client.on("chat", (channel, userstate, message, self) => {
                 client.say(channel, 'Map not found.');
             }
         }
-
     }
     if (CommandIs('!update') && userstate.badges.broadcaster) {
         UpdateMapNames();
