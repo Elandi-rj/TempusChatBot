@@ -138,7 +138,7 @@ client.on("chat", (channel, userstate, message, self) => {
                 }
             });
             if (map) {
-                MapInfo(map);
+                client.say(channel, `${player.name} is playing ${map}`)
             }
             else {
                 client.say(channel, `That player isn't currently on a tempus server`);
