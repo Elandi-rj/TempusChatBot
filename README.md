@@ -2,6 +2,7 @@
  chat bot that interfaces with the tempus api for twitch commands
 
 # CurrentCommands (replace s with d for demo commands)
+ !playing playerName <br>
  !stime mapName rankIndex <br>
  !stime mapName playerName <br>
  !swr mapName <br>
@@ -16,6 +17,8 @@
  !tempuscommands <br>
 
 # Examples
+ !playing bwai <br>
+ output: jump_bangarang by roberto, Solly T6 | Demo T3
  !stime 4starters 3 <br>
  output: (Solly) Shunix -tt is ranked 3 on jump_4starters_rc1 with time: 8:51.13 <br>
  !stime when steve <br>

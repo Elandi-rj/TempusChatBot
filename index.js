@@ -121,6 +121,30 @@ client.on("chat", (channel, userstate, message, self) => {
                 client.say(channel, error.response.data.error);
             })
     }
+    function SearchPlayerMap(player) {
+        var query = `https://tempus.xyz/api/servers/statusList`;
+        axios.get(query).then(response => {
+            var map = '';
+            var data = response.data;
+            data.forEach(server => {
+                if (server.game_info) {
+                    var users = server.game_info.users;
+                    users.find(function (person) {
+                        if (person.id === player.id) {
+                            map = server.game_info.currentMap;
+                            return;
+                        }
+                    });
+                }
+            });
+            if (map) {
+                MapInfo(map);
+            }
+            else {
+                client.say(channel, `That player isn't currently on a tempus server`);
+            }
+        })
+    }
     //todo add player.js feature back
     // add !playerinfo function for ranks and such
     // !srank 20
@@ -129,6 +153,7 @@ client.on("chat", (channel, userstate, message, self) => {
     // add !svid
     // maybe add !recent https://tempus.xyz/api/activity
     // !voteparty
+    //https://tempus.xyz/api/players/id/170674/rank
 
     function PlayerOrTimeSearch(command, map, searchTerm, index, classResponse, zoneType, zoneIndex) {
         if (!isNaN(searchTerm - 0)) {
@@ -208,5 +233,15 @@ client.on("chat", (channel, userstate, message, self) => {
     if (CommandIs('!update') && userstate.badges.broadcaster) {
         UpdateMapNames();
     }
-    //https://tempus.xyz/api/players/id/170674/rank
+    if (CommandIs('!playing')) {
+        var searchTerm = message.split(' ').slice(1).join(' ');
+        SearchPlayer(searchTerm).then(player => {
+            if (player) {
+                SearchPlayerMap(player);
+            }
+            else {
+                client.say(channel, 'No person found');
+            }
+        })
+    }
 });
