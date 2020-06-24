@@ -37,7 +37,7 @@
  !m simplified <br>
  output: jump_simplified_rc1 by Niirvash, Solly T4 | Demo T4 <br>
  !svid simplified <br>
- output: (Solly) jump_simplified_rc1 https://www.youtube.com/watch?v=sWu2dGTDM-o
+ output: (Solly) jump_simplified_rc1 https://www.youtube.com/watch?v=sWu2dGTDM-o <br>
  !sbtime when 3 2 <br>
  output: (Solly) Makly is ranked 2 on jump_when_b2_fix bonus 3 with time: 0:19.82 <br>
  !sbtime simply 1 steve <br>
