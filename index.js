@@ -141,7 +141,7 @@ client.on("chat", (channel, userstate, message, self) => {
                 if (server.game_info) {
                     var users = server.game_info.users;
                     users.find(function (person) {
-                        if (person.name === player.name) {
+                        if (person.steamid === player.steamid) {
                             map = server.game_info.currentMap;
                             return;
                         }
