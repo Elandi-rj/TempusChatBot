@@ -1,36 +1,82 @@
 players = [
     {
-        name: 'Steve',
-        steamid: 'STEAM_0:0:51817875',
+        aliases: ['steve', 'arvinge'],
         id: 11020,
-        channelName: '#arvinge'
     },
     {
-        name: 'Elandi',
-        steamid: 'STEAM_0:0:166849573',
+        aliases: ['elandi'],
         id: 170674,
-        channelName: '#elandi'
     },
     {
-        name: 'Matty',
-        steamid: 'STEAM_0:1:37469408',
+        aliases: ['matty'],
         id: 1320,
-        channelName: '#au_matty'
     },
     {
-        name: 'Skinny',
-        steamid: 'STEAM_0:0:110172267',
+        aliases: ['megawop'],
+        id: 630,
+    },
+    {
+        aliases: ['skinny'],
         id: 78463,
-        channelName: '#skinny_lad'
     },
     {
-        name: 'Boshy',
-        steamid: 'STEAM_0:0:43167835',
+        aliases: ['boshy'],
         id: 39902,
-        channelName: '#boshytf'
+    },
+    {
+        aliases: ['kater'],
+        id: 99892,
+    },
+    {
+        aliases: ['newjuls'],
+        id: 281915,
+    },
+    {
+        aliases: ['riot'],
+        id: 145,
+    },
+    {
+        aliases: ['tripbwai', 'trip', 'bwai'],
+        id: 11255,
+    },
+    {
+        aliases: ['kidder'],
+        id: 76057,
+    },
+    {
+        aliases: ['teardrop'],
+        id: 3677,
+    },
+    {
+        aliases: ['superchuck'],
+        id: 344,
+    },
+    {
+        aliases: ['vice'],
+        id: 10736,
+    },
+    {
+        aliases: ['zike'],
+        id: 5164,
+    },
+    {
+        aliases: ['soup'],
+        id: 2220,
+    },
+    {
+        aliases: ['starkie'],
+        id: 72697,
+    },
+    {
+        aliases: ['deceptive'],
+        id: 196930,
     },
 ]
 
 module.exports = function (name) {
-    return players.find(p => p.channelName == name);
+    return players.find(p =>
+        p.aliases.find(alias =>
+            alias == name.toLowerCase()
+        )
+    );
 }

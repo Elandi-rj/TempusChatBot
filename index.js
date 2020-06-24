@@ -4,7 +4,7 @@ const axios = require('axios');
 const ClosestsName = require('./utilities.js').ClosestsName;
 const UpdateMapNames = require('./utilities.js').UpdateMapNames;
 const secondsToTimeFormat = require('./utilities.js').secondsToTimeFormat;
-const findPlayer = require('./players');
+const FindPlayer = require('./players');
 
 const client = new tmi.client(options);
 client.connect();
@@ -49,16 +49,27 @@ client.on("chat", (channel, userstate, message, self) => {
             })
     }
     async function SearchPlayer(searchTerm) {
-        var playerQuery = `https://tempus.xyz/api/search/playersAndMaps/${searchTerm}`;
-        console.log(playerQuery);
-        return await axios.get(playerQuery)
-            .then(p => {
-                return p.data.players[0];
-            })
-            .catch(error => {
-                console.log(error.response.data.error);
-                throw error;
-            });
+        var aliasPerson = FindPlayer(searchTerm);
+        if (aliasPerson) {
+            var query = `https://tempus.xyz/api/players/id/${aliasPerson.id}/info`
+            return await axios.get(query)
+                .then(response => {
+                    return response.data;
+                })
+        }
+        else {
+            var playerQuery = `https://tempus.xyz/api/search/playersAndMaps/${searchTerm}`;
+            console.log(playerQuery);
+            return await axios.get(playerQuery)
+                .then(p => {
+                    return p.data.players[0];
+                })
+                .catch(error => {
+                    console.log(error.response.data.error);
+                    throw error;
+                });
+        }
+
     }
     function SearchTimeWithPlayer(player, classResponse, map, zoneType, zoneIndex) {
         var query = `https://tempus.xyz/api/maps/name/${map}/zones/typeindex/${zoneType}/${zoneIndex}/records/list?limit=0`
