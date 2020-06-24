@@ -130,7 +130,7 @@ client.on("chat", (channel, userstate, message, self) => {
                 if (server.game_info) {
                     var users = server.game_info.users;
                     users.find(function (person) {
-                        if (person.id === player.id) {
+                        if (person.name === player.name) {
                             map = server.game_info.currentMap;
                             return;
                         }
@@ -145,13 +145,80 @@ client.on("chat", (channel, userstate, message, self) => {
             }
         })
     }
+    function PlayerRank(player, type) {
+        var query = `https://tempus.xyz/api/players/id/${player.id}/rank`;
+        axios.get(query)
+            .then(response => {
+                var person = response.data;
+                var rank = '';
+                switch (type) {
+                    case 'class/3':
+                        rank = `${person.class_rank_info['3'].rank} (Solly)`;
+                        break;
+                    case 'class/4':
+                        rank = `${person.class_rank_info['4'].rank} (Demo)`;
+                        break;
+                    case 'overall':
+                        rank = `${person.rank_info.rank} (Overall)`;
+                        break;
+                    default:
+                        break;
+                }
+                client.say(channel, `${player.name} is ranked ${rank}`);
+            })
+            .catch(error => {
+                client.say(channel, error.response.data.error);
+            });
+    }
+    function SearchRank(index, type) {
+        if (index < 1 || isNaN(index)) { index = 1; }
+        var query = `https://tempus.xyz/api/ranks/${type}?start=${index}`;
+        console.log(query);
+        axios.get(query)
+            .then(response => {
+                person = response.data.players[0];
+                if (person) {
+                    var rank = '';
+                    switch (type) {
+                        case 'class/3':
+                            rank = `${person.rank} (Solly)`;
+                            break;
+                        case 'class/4':
+                            rank = `${person.rank} (Demo)`;
+                            break;
+                        case 'overall':
+                            rank = `${person.rank} (Overall)`;
+                            break;
+                        default:
+                            break;
+                    }
+                    client.say(channel, `${person.name} is ranked ${rank}`);
+                }
+                else {
+                    client.say(channel, `No person found`);
+                }
+            })
+            .catch(error => console.log(error));
+    }
+    function MapVideo(map, classResponse) {
+        var query = `https://tempus.xyz/api/maps/name/${map}/fullOverview`
+        console.log(query);
+        axios.get(query)
+            .then(response => {
+                var url = response.data.videos[classResponse];
+                if (url) {
+                    var msg = `(${classResponse == 'soldier' ? 'Solly' : 'Demo'}) ${map} https://www.youtube.com/watch?v=${url}`;
+                    client.say(channel, msg);
+                }
+                else {
+                    client.say(channel, 'no video found');
+                }
+
+            })
+    }
     //todo add player.js feature back
-    // add !playerinfo function for ranks and such
-    // !srank 20
-    // add course wr and times too
     // !demo maybe
     // add !svid
-    // maybe add !recent https://tempus.xyz/api/activity
     // !voteparty
     //https://tempus.xyz/api/players/id/170674/rank
 
@@ -226,7 +293,7 @@ client.on("chat", (channel, userstate, message, self) => {
                 MapInfo(map);
             }
             else {
-                client.say(channel, 'Map not found.');
+                client.say(channel, 'Map not found');
             }
         }
     }
@@ -243,5 +310,38 @@ client.on("chat", (channel, userstate, message, self) => {
                 client.say(channel, 'No person found');
             }
         })
+    }
+    if (CommandIs('!srank') || CommandIs('!drank') || CommandIs('!rank')) {
+        var searchTerm = message.split(' ').slice(1).join(' ');
+        var index = message.split(' ')[1];
+        var type = 'overall';
+        if (!CommandIs('!rank')) {
+            type = CommandIs('!srank') ? 'class/3' : 'class/4';
+        }
+        if (!isNaN(searchTerm - 0)) {
+            SearchRank(index, type);
+        }
+        else {
+            SearchPlayer(searchTerm)
+                .then(player => {
+                    if (player) {
+                        PlayerRank(player, type);
+                    }
+                    else {
+                        client.say(channel, 'No person was found')
+                    }
+                });
+        }
+    }
+    if (CommandIs('!svid') || CommandIs('!dvid')) {
+        var map = ClosestsName(commandMap);
+        if (map) {
+            var classResponse = CommandIs('!svid') ? 'soldier' : 'demoman';
+            MapVideo(map, classResponse)
+        }
+        else {
+            client.say(channel, 'Map not found');
+        }
+
     }
 });

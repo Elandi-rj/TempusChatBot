@@ -3,10 +3,15 @@
 
 # CurrentCommands (replace s with d for demo commands)
  !playing playerName <br>
+ !srank playerName <br>
+ !srank rankIndex <br>
+ !rank playerName <br>
+ !rank rankIndex <br>
  !stime mapName rankIndex <br>
  !stime mapName playerName <br>
  !swr mapName <br>
  !m mapName <br>
+ !svid mapName <br>
  !sbtime mapName bonusIndex rankIndex  <br>
  !sbtime mapName bonusIndex playerName <br>
  !sbwr mapName bonusIndex<br>
@@ -18,7 +23,11 @@
 
 # Examples
  !playing bwai <br>
- output: jump_bangarang by roberto, Solly T6 | Demo T3
+ output: jump_bangarang by roberto, Solly T6 | Demo T3 <br>
+ !srank boshy <br>
+ output: Boshy is ranked 1 (Solly) <br>
+ !srank 2 <br>
+ output: Steve is ranked 2 (Solly) <br>
  !stime 4starters 3 <br>
  output: (Solly) Shunix -tt is ranked 3 on jump_4starters_rc1 with time: 8:51.13 <br>
  !stime when steve <br>
@@ -27,6 +36,8 @@
  output: (Solly) Boshy is ranked 1 on jump_vex_final with time: 2:23.97 <br>
  !m simplified <br>
  output: jump_simplified_rc1 by Niirvash, Solly T4 | Demo T4 <br>
+ !svid simplified <br>
+ output: (Solly) jump_simplified_rc1 https://www.youtube.com/watch?v=sWu2dGTDM-o
  !sbtime when 3 2 <br>
  output: (Solly) Makly is ranked 2 on jump_when_b2_fix bonus 3 with time: 0:19.82 <br>
  !sbtime simply 1 steve <br>
