@@ -24,12 +24,16 @@ players = [
         id: 39902,
     },
     {
-        aliases: ['kater'],
+        aliases: ['kater', 'exor'],
         id: 99892,
     },
     {
         aliases: ['newjuls'],
         id: 281915,
+    },
+    {
+        aliases: ['fences'],
+        id: 1701,
     },
     {
         aliases: ['riot'],
@@ -42,6 +46,10 @@ players = [
     {
         aliases: ['kidder'],
         id: 76057,
+    },
+    {
+        aliases: ['un gato', 'ungatoo', 'ungato', 'gato'],
+        id: 82781,
     },
     {
         aliases: ['teardrop'],
