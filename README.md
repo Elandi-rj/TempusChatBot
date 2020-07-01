@@ -23,7 +23,7 @@
 
 # Examples
  !playing bwai <br>
- output: jump_bangarang by roberto, Solly T6 | Demo T3 <br>
+ output: bwai is playing jump_storm_final <br>
  !srank boshy <br>
  output: Boshy is ranked 1 (Solly) <br>
  !srank 2 <br>
