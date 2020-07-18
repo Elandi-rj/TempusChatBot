@@ -4,7 +4,8 @@ const axios = require('axios');
 const ClosestsName = require('./utilities.js').ClosestsName;
 const UpdateMapNames = require('./utilities.js').UpdateMapNames;
 const secondsToTimeFormat = require('./utilities.js').secondsToTimeFormat;
-const FindPlayer = require('./players');
+const FindPlayer = require('./players').FindPlayer;
+const FindPlayerFromChannel = require('./players').FindPlayerFromChannel;
 
 const client = new tmi.client(options);
 client.connect();
@@ -149,7 +150,7 @@ client.on("chat", (channel, userstate, message, self) => {
                 }
             });
             if (map) {
-                client.say(channel, `${player.name} is playing ${map}`)
+                MapInfo(map);
             }
             else {
                 client.say(channel, `That player isn't currently on a tempus server`);
@@ -227,12 +228,6 @@ client.on("chat", (channel, userstate, message, self) => {
 
             })
     }
-    //todo add player.js feature back
-    // !demo maybe
-    // add !svid
-    // !voteparty
-    //https://tempus.xyz/api/players/id/170674/rank
-
     function PlayerOrTimeSearch(command, map, searchTerm, index, classResponse, zoneType, zoneIndex) {
         if (!isNaN(searchTerm - 0)) {
             SearchTime(map, classResponse, command, index, zoneType, zoneIndex);
@@ -295,17 +290,25 @@ client.on("chat", (channel, userstate, message, self) => {
         client.say(channel, 'https://github.com/Elandi-rj/TempusChatBot/blob/master/README.md');
     }
     if (CommandIs('!m') || CommandIs('!mi')) {
-        if (commandMap === 'p' || commandMap === 'jump_p') { //stop naming your maps with letters ;/
-            client.say(channel, 'jump_p by bshear, Solly T5 | Demo T5 | 1 bonus');
-        }
-        else {
-            var map = ClosestsName(commandMap);
-            if (map) {
-                MapInfo(map);
+        if (commandMap) {
+            if (commandMap === 'p' || commandMap === 'jump_p') { //stop naming your maps with letters ;/
+                client.say(channel, 'jump_p by bshear, Solly T5 | Demo T5 | 1 bonus');
             }
             else {
-                client.say(channel, 'Map not found');
+                var map = ClosestsName(commandMap);
+                if (map) {
+                    MapInfo(map);
+                }
+                else {
+                    client.say(channel, 'Map not found');
+                }
             }
+        }
+        else {
+            var person = FindPlayerFromChannel(channel);
+            SearchPlayer(person.aliases[0]).then(p =>
+                SearchPlayerMap(p)
+            );
         }
     }
     if (CommandIs('!update') && userstate.badges.broadcaster) {
@@ -353,6 +356,5 @@ client.on("chat", (channel, userstate, message, self) => {
         else {
             client.say(channel, 'Map not found');
         }
-
     }
 });

@@ -11,6 +11,7 @@
  !stime mapName playerName <br>
  !swr mapName <br>
  !m mapName <br>
+ !m <br>
  !svid mapName <br>
  !sbtime mapName bonusIndex rankIndex  <br>
  !sbtime mapName bonusIndex playerName <br>
@@ -35,6 +36,8 @@
  !swr vex <br>
  output: (Solly) Boshy is ranked 1 on jump_vex_final with time: 2:23.97 <br>
  !m simplified <br>
+ output: jump_simplified_rc1 by Niirvash, Solly T4 | Demo T4 <br>
+ !m <br>
  output: jump_simplified_rc1 by Niirvash, Solly T4 | Demo T4 <br>
  !svid simplified <br>
  output: (Solly) jump_simplified_rc1 https://www.youtube.com/watch?v=sWu2dGTDM-o <br>

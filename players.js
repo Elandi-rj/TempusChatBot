@@ -2,14 +2,17 @@ players = [
     {
         aliases: ['steve', 'arvinge'],
         id: 11020,
+        channel: 'arvinge',
     },
     {
         aliases: ['elandi'],
         id: 170674,
+        channel: 'elandi',
     },
     {
         aliases: ['matty'],
         id: 1320,
+        channel: 'au_matty',
     },
     {
         aliases: ['megawop'],
@@ -18,10 +21,12 @@ players = [
     {
         aliases: ['skinny'],
         id: 78463,
+        channel: 'skinny_lad',
     },
     {
         aliases: ['boshy'],
         id: 39902,
+        channel: 'boshytf',
     },
     {
         aliases: ['kater', 'exor'],
@@ -30,6 +35,7 @@ players = [
     {
         aliases: ['newjuls'],
         id: 281915,
+        channel: 'newjuls',
     },
     {
         aliases: ['fences'],
@@ -42,6 +48,7 @@ players = [
     {
         aliases: ['tripbwai', 'trip', 'bwai'],
         id: 11255,
+        channel: 'tripbwai',
     },
     {
         aliases: ['kidder'],
@@ -54,6 +61,12 @@ players = [
     {
         aliases: ['teardrop'],
         id: 3677,
+        channel: 'teardrop_tf',
+    },
+    {
+        aliases: ['kaptain'],
+        id: 68414,
+        channel: 'kaptain__',
     },
     {
         aliases: ['superchuck'],
@@ -66,6 +79,7 @@ players = [
     {
         aliases: ['zike'],
         id: 5164,
+        channel: 'zike1017',
     },
     {
         aliases: ['soup'],
@@ -80,11 +94,17 @@ players = [
         id: 196930,
     },
 ]
-
-module.exports = function (name) {
+function FindPlayer(name) {
     return players.find(p =>
         p.aliases.find(alias =>
             alias == name.toLowerCase()
         )
     );
 }
+function FindPlayerFromChannel(channelName) {
+    return players.find(p =>
+        '#' + p.channel == channelName
+    );
+}
+exports.FindPlayer = FindPlayer;
+exports.FindPlayerFromChannel = FindPlayerFromChannel;
