@@ -357,4 +357,10 @@ client.on("chat", (channel, userstate, message, self) => {
             client.say(channel, 'Map not found');
         }
     }
+    if (CommandIs('!voteparty')) {
+        client.say(channel, 'WELCOME TO THE PARTY (!leaveparty to leave)');
+    }
+    if (CommandIs('!leaveparty')) {
+        client.say(channel, ':(');
+    }
 });
