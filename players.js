@@ -44,6 +44,7 @@ players = [
     {
         aliases: ['riot'],
         id: 145,
+        channel: 'riotbz',
     },
     {
         aliases: ['tripbwai', 'trip', 'bwai'],
