@@ -1,4 +1,4 @@
-const mapNames = require('./MapNames').list;
+let mapNames = require('./MapNames').list;
 function UpdateMapNames() {
     var query = 'https://tempus.xyz/api/maps/detailedList';
     const axios = require('axios');
@@ -10,6 +10,7 @@ function UpdateMapNames() {
             });
             var fs = require('fs');
             fs.writeFileSync('MapNames.js', 'exports.list =' + JSON.stringify(maps));
+            mapNames = maps;
             console.log('Map list has been updated!');
         })
         .catch(function (error) {
