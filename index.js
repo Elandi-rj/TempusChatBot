@@ -70,14 +70,11 @@ client.on("chat", (channel, userstate, message, self) => {
                     throw error;
                 });
         }
-
     }
     function SearchTimeWithPlayer(player, classResponse, map, zoneType, zoneIndex) {
         var classIndex = classResponse == 'soldier' ? 3 : 4;
-        //var query = `https://tempus.xyz/api/maps/name/${map}/zones/typeindex/${zoneType}/${zoneIndex}/records/list?limit=0`
         var query = `https://tempus.xyz/api/maps/name/${map}/zones/typeindex/${zoneType}/${zoneIndex}/records/player/${player.id}/${classIndex}`;
         console.log(query);
-
         axios.get(query)
             .then(function (response) {
                 var data = response.data.result;
@@ -92,7 +89,6 @@ client.on("chat", (channel, userstate, message, self) => {
                 else {
                     client.say(channel, 'No record found');
                 }
-
             })
             .catch(function (error) {
                 // handle error
@@ -244,6 +240,10 @@ client.on("chat", (channel, userstate, message, self) => {
         var searchTerm = message.split(' ').slice(2).join(' ');
         var index = message.split(' ')[2] - 0;
         var classResponse = CommandIs('!stime') ? 'soldier' : 'demoman';
+        if (map == undefined) {
+            map = ClosestsName(message.split(' ')[2]);
+            searchTerm = message.split(' ')[1];
+        }
         PlayerOrTimeSearch(command, map, searchTerm, index, classResponse, 'map', 1)
     }
     if (CommandIs('!swr') || CommandIs('!dwr')) {
@@ -258,6 +258,10 @@ client.on("chat", (channel, userstate, message, self) => {
         var searchTerm = message.split(' ').slice(3).join(' ');
         var zoneIndex = message.split(' ')[2];
         var classResponse = CommandIs('!sbtime') ? 'soldier' : 'demoman';
+        if (map == undefined) {
+            map = ClosestsName(message.split(' ')[3]);
+            searchTerm = message.split(' ')[1];
+        }
         PlayerOrTimeSearch(command, map, searchTerm, index, classResponse, 'bonus', zoneIndex)
     }
     if (CommandIs('!sbwr') || CommandIs('!dbwr')) {
@@ -272,6 +276,10 @@ client.on("chat", (channel, userstate, message, self) => {
         var searchTerm = message.split(' ').slice(3).join(' ');
         var zoneIndex = message.split(' ')[2];
         var classResponse = CommandIs('!sctime') ? 'soldier' : 'demoman';
+        if (map == undefined) {
+            map = ClosestsName(message.split(' ')[3]);
+            searchTerm = message.split(' ')[1];
+        }
         PlayerOrTimeSearch(command, map, searchTerm, index, classResponse, 'course', zoneIndex)
     }
     if (CommandIs('!scwr') || CommandIs('!dcwr')) {
