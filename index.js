@@ -30,7 +30,7 @@ client.on("chat", (channel, userstate, message, self) => {
         console.log(query);
         axios.get(query)
             .then(function (response) {
-                var data = response.data.results[classResponse][0]
+                var data = response.data.results[classResponse][0];
                 if (data) {
                     var time = secondsToTimeFormat(data.duration);
                     var zoneInfo = '';
@@ -38,7 +38,7 @@ client.on("chat", (channel, userstate, message, self) => {
                         zoneInfo = ` ${zoneType} ${zoneIndex}`;
                     }
                     //Tempus | (Solly) Boshy is ranked 2/47 on jump_rabbit_final3 with time: 10:48.06
-                    client.say(channel, `(${classResponse == 'soldier' ? 'Solly' : 'Demo'}) ${data.name} is ranked ${index} on ${map}${zoneInfo} with time: ${time}`);
+                    client.say(channel, `(${classResponse == 'soldier' ? 'Solly' : 'Demo'}) ${data.name} is ranked ${index}/${response.data.completion_info[classResponse]} on ${map}${zoneInfo} with time: ${time}`);
                 }
                 else {
                     client.say(channel, `No record found`);
@@ -59,7 +59,7 @@ client.on("chat", (channel, userstate, message, self) => {
                 })
         }
         else {
-            var playerQuery = `https://tempus.xyz/api/search/playersAndMaps/${searchTerm}`;
+            var playerQuery = `https://tempus.xyz/api/search/playersAndMaps/${searchTerm.replace("/", '')}`;
             console.log(playerQuery);
             return await axios.get(playerQuery)
                 .then(p => {
@@ -73,27 +73,21 @@ client.on("chat", (channel, userstate, message, self) => {
 
     }
     function SearchTimeWithPlayer(player, classResponse, map, zoneType, zoneIndex) {
-        var query = `https://tempus.xyz/api/maps/name/${map}/zones/typeindex/${zoneType}/${zoneIndex}/records/list?limit=0`
+        var classIndex = classResponse == 'soldier' ? 3 : 4;
+        //var query = `https://tempus.xyz/api/maps/name/${map}/zones/typeindex/${zoneType}/${zoneIndex}/records/list?limit=0`
+        var query = `https://tempus.xyz/api/maps/name/${map}/zones/typeindex/${zoneType}/${zoneIndex}/records/player/${player.id}/${classIndex}`;
         console.log(query);
 
         axios.get(query)
             .then(function (response) {
-                var rankIndex = 0;
-                var timesLength = 0;
-                var data = response.data.results[classResponse].find(function (element, index, array) {
-                    if (element.player_info.id == player.id) {
-                        rankIndex = index + 1;
-                        timesLength = array.length;
-                        return element;
-                    }
-                });
+                var data = response.data.result;
                 if (data) {
                     var time = secondsToTimeFormat(data.duration);
                     var zoneInfo = '';
                     if (zoneType != 'map') {
                         zoneInfo = ` ${zoneType} ${zoneIndex}`;
                     }
-                    client.say(channel, `(${classResponse == 'soldier' ? 'Solly' : 'Demo'}) ${data.name} is ranked ${rankIndex}/${timesLength} on ${map}${zoneInfo} with time: ${time}`);
+                    client.say(channel, `(${classResponse == 'soldier' ? 'Solly' : 'Demo'}) ${data.name} is ranked ${data.rank}/${response.data.completion_info[classResponse]} on ${map}${zoneInfo} with time: ${time}`);
                 }
                 else {
                     client.say(channel, 'No record found');
