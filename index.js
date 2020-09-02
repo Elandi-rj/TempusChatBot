@@ -243,6 +243,7 @@ client.on("chat", (channel, userstate, message, self) => {
         if (map == undefined) {
             map = ClosestsName(message.split(' ')[2]);
             searchTerm = message.split(' ')[1];
+            index = message.split(' ')[1] - 0;
         }
         PlayerOrTimeSearch(command, map, searchTerm, index, classResponse, 'map', 1)
     }
@@ -261,6 +262,7 @@ client.on("chat", (channel, userstate, message, self) => {
         if (map == undefined) {
             map = ClosestsName(message.split(' ')[3]);
             searchTerm = message.split(' ')[1];
+            index = message.split(' ')[1] - 0;
         }
         PlayerOrTimeSearch(command, map, searchTerm, index, classResponse, 'bonus', zoneIndex)
     }
@@ -279,6 +281,7 @@ client.on("chat", (channel, userstate, message, self) => {
         if (map == undefined) {
             map = ClosestsName(message.split(' ')[3]);
             searchTerm = message.split(' ')[1];
+            index = message.split(' ')[1] - 0;
         }
         PlayerOrTimeSearch(command, map, searchTerm, index, classResponse, 'course', zoneIndex)
     }
