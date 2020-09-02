@@ -8,6 +8,7 @@
  !rank playerName <br>
  !rank rankIndex <br>
  !stime <br>
+ !stime playerName<br>
  !stime mapName <br>
  !stime mapName rankIndex <br>
  !stime mapName playerName <br>
