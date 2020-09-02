@@ -21,7 +21,7 @@ client.on("chat", (channel, userstate, message, self) => {
     var commandMap = message.split(' ')[1];
 
     function CommandIs(msg) {
-        return command === msg;
+        return command.toLowerCase() === msg;
     }
     function SearchTime(map, classResponse, command, index, zoneType, zoneIndex) {
         if (index < 1 || isNaN(index)) { index = 1; }
@@ -42,7 +42,7 @@ client.on("chat", (channel, userstate, message, self) => {
                     client.say(channel, `(${classResponse == 'soldier' ? 'Solly' : 'Demo'}) ${data.name} is ranked ${index}/${response.data.completion_info[classResponse]} on ${map}${zoneInfo} with time: ${time}`);
                 }
                 else {
-                    client.say(channel, `No record found`);
+                    client.say(channel, `No record found on ` + map);
                 }
             })
             .catch(function (error) {
@@ -88,7 +88,7 @@ client.on("chat", (channel, userstate, message, self) => {
                     client.say(channel, `(${classResponse == 'soldier' ? 'Solly' : 'Demo'}) ${data.name} is ranked ${data.rank}/${response.data.completion_info[classResponse]} on ${map}${zoneInfo} with time: ${time}`);
                 }
                 else {
-                    client.say(channel, 'No record found');
+                    client.say(channel, 'No record found on ' + map);
                 }
             })
             .catch(function (error) {
@@ -236,12 +236,17 @@ client.on("chat", (channel, userstate, message, self) => {
         var searchTerm = message.split(' ').slice(2).join(' ');
         var index = message.split(' ')[2] - 0;
         var classResponse = CommandIs('!stime') ? 'soldier' : 'demoman';
+        var person = FindPlayerFromChannel(channel).aliases[0];
+        if (map == undefined && message.split(' ')[2] == undefined || !isNaN(message.split(' ')[1]) && message.split(' ')[2] == undefined) {
+            person = commandMap;
+            commandMap = undefined;
+            index = message.split(' ')[1] - 0;
+        }
         if (commandMap == undefined) {
-            var person = FindPlayerFromChannel(channel);
-            SearchPlayer(person.aliases[0]).then(p =>
+            SearchPlayer(FindPlayerFromChannel(channel).aliases[0]).then(p =>
                 SearchPlayerMap(p)
                     .then(map =>
-                        PlayerOrTimeSearch(command, map, person.aliases[0], index, classResponse, 'map', 1))
+                        PlayerOrTimeSearch(command, map, person, index, classResponse, 'map', 1))
             );
         }
         else {
@@ -251,15 +256,15 @@ client.on("chat", (channel, userstate, message, self) => {
                 index = message.split(' ')[1] - 0;
             }
             if (searchTerm == '') {
-                searchTerm = FindPlayerFromChannel(channel).aliases[0];
+                searchTerm = person;
             }
             if (!isNaN(commandMap)) {
                 map = ClosestsName(message.split(' ')[2]);
                 searchTerm = message.split(' ')[1] - 0;
+                index = message.split(' ')[1] - 0;
             }
             PlayerOrTimeSearch(command, map, searchTerm, index, classResponse, 'map', 1)
         }
-
     }
     if (CommandIs('!swr') || CommandIs('!dwr')) {
         var map = ClosestsName(commandMap);
