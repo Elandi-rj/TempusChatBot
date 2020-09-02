@@ -240,7 +240,8 @@ client.on("chat", (channel, userstate, message, self) => {
             var person = FindPlayerFromChannel(channel);
             SearchPlayer(person.aliases[0]).then(p =>
                 SearchPlayerMap(p)
-                    .then(map => PlayerOrTimeSearch(command, map, person.aliases[0], index, classResponse, 'map', 1))
+                    .then(map =>
+                        PlayerOrTimeSearch(command, map, person.aliases[0], index, classResponse, 'map', 1))
             );
         }
         else {
@@ -251,6 +252,10 @@ client.on("chat", (channel, userstate, message, self) => {
             }
             if (searchTerm == '') {
                 searchTerm = FindPlayerFromChannel(channel).aliases[0];
+            }
+            if (!isNaN(commandMap)) {
+                map = ClosestsName(message.split(' ')[2]);
+                searchTerm = message.split(' ')[1] - 0;
             }
             PlayerOrTimeSearch(command, map, searchTerm, index, classResponse, 'map', 1)
         }
