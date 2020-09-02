@@ -7,6 +7,7 @@
  !srank rankIndex <br>
  !rank playerName <br>
  !rank rankIndex <br>
+ !stime <br>
  !stime mapName <br>
  !stime mapName rankIndex <br>
  !stime mapName playerName <br>
@@ -14,13 +15,15 @@
  !m mapName <br>
  !m <br>
  !svid mapName <br>
+ !sbtime bonusIndex <br>
  !sbtime mapName bonusIndex <br>
  !sbtime mapName bonusIndex rankIndex <br>
  !sbtime mapName bonusIndex playerName <br>
  !sbwr mapName bonusIndex <br>
  !scwr mapName courseIndex <br>
- !sctime mapName courseIndex rankIndex <br>
+ !sctime courseIndex <br>
  !sctime mapName courseIndex <br>
+ !sctime mapName courseIndex rankIndex <br>
  !sctime mapName courseIndex playerName <br>
  !update (broadcaster only to update mapNames file any time new maps are added to tempus) <br>
  !tempuscommands <br>

@@ -19,6 +19,7 @@ client.on("chat", (channel, userstate, message, self) => {
 
     var command = message.split(' ')[0];
     var commandMap = message.split(' ')[1];
+
     function CommandIs(msg) {
         return command === msg;
     }
@@ -123,9 +124,9 @@ client.on("chat", (channel, userstate, message, self) => {
                 client.say(channel, error.response.data.error);
             })
     }
-    function SearchPlayerMap(player) {
+    async function SearchPlayerMap(player) {
         var query = `https://tempus.xyz/api/servers/statusList`;
-        axios.get(query).then(response => {
+        return await axios.get(query).then(response => {
             var map = '';
             var data = response.data;
             data.forEach(server => {
@@ -139,12 +140,7 @@ client.on("chat", (channel, userstate, message, self) => {
                     });
                 }
             });
-            if (map) {
-                MapInfo(map);
-            }
-            else {
-                client.say(channel, `That player isn't currently on a tempus server`);
-            }
+            return map;
         })
     }
     function PlayerRank(player, type) {
@@ -240,15 +236,25 @@ client.on("chat", (channel, userstate, message, self) => {
         var searchTerm = message.split(' ').slice(2).join(' ');
         var index = message.split(' ')[2] - 0;
         var classResponse = CommandIs('!stime') ? 'soldier' : 'demoman';
-        if (map == undefined) {
-            map = ClosestsName(message.split(' ')[2]);
-            searchTerm = message.split(' ')[1];
-            index = message.split(' ')[1] - 0;
+        if (commandMap == undefined) {
+            var person = FindPlayerFromChannel(channel);
+            SearchPlayer(person.aliases[0]).then(p =>
+                SearchPlayerMap(p)
+                    .then(map => PlayerOrTimeSearch(command, map, person.aliases[0], index, classResponse, 'map', 1))
+            );
         }
-        if (searchTerm == '') {
-            searchTerm = FindPlayerFromChannel(channel).aliases[0];
+        else {
+            if (map == undefined) {
+                map = ClosestsName(message.split(' ')[2]);
+                searchTerm = message.split(' ')[1];
+                index = message.split(' ')[1] - 0;
+            }
+            if (searchTerm == '') {
+                searchTerm = FindPlayerFromChannel(channel).aliases[0];
+            }
+            PlayerOrTimeSearch(command, map, searchTerm, index, classResponse, 'map', 1)
         }
-        PlayerOrTimeSearch(command, map, searchTerm, index, classResponse, 'map', 1)
+
     }
     if (CommandIs('!swr') || CommandIs('!dwr')) {
         var map = ClosestsName(commandMap);
@@ -262,15 +268,29 @@ client.on("chat", (channel, userstate, message, self) => {
         var searchTerm = message.split(' ').slice(3).join(' ');
         var zoneIndex = message.split(' ')[2];
         var classResponse = CommandIs('!sbtime') ? 'soldier' : 'demoman';
-        if (map == undefined) {
-            map = ClosestsName(message.split(' ')[3]);
-            searchTerm = message.split(' ')[1];
-            index = message.split(' ')[1] - 0;
+        if (commandMap == undefined || !isNaN(commandMap)) {
+            var person = FindPlayerFromChannel(channel);
+            index = message.split(' ')[2];
+            zoneIndex = message.split(' ')[1];
+            SearchPlayer(person.aliases[0]).then(p =>
+                SearchPlayerMap(p)
+                    .then(map => {
+                        PlayerOrTimeSearch(command, map, person.aliases[0], index, classResponse, 'bonus', zoneIndex)
+                    })
+            );
         }
-        if (searchTerm == '') {
-            searchTerm = FindPlayerFromChannel(channel).aliases[0];
+        else {
+            if (map == undefined) {
+                map = ClosestsName(message.split(' ')[3]);
+                searchTerm = message.split(' ')[1];
+                index = message.split(' ')[1] - 0;
+            }
+            if (searchTerm == '') {
+                searchTerm = FindPlayerFromChannel(channel).aliases[0];
+            }
+            PlayerOrTimeSearch(command, map, searchTerm, index, classResponse, 'bonus', zoneIndex)
         }
-        PlayerOrTimeSearch(command, map, searchTerm, index, classResponse, 'bonus', zoneIndex)
+
     }
     if (CommandIs('!sbwr') || CommandIs('!dbwr')) {
         var map = ClosestsName(commandMap);
@@ -284,15 +304,29 @@ client.on("chat", (channel, userstate, message, self) => {
         var searchTerm = message.split(' ').slice(3).join(' ');
         var zoneIndex = message.split(' ')[2];
         var classResponse = CommandIs('!sctime') ? 'soldier' : 'demoman';
-        if (map == undefined) {
-            map = ClosestsName(message.split(' ')[3]);
-            searchTerm = message.split(' ')[1];
-            index = message.split(' ')[1] - 0;
+        if (commandMap == undefined || !isNaN(commandMap)) {
+            var person = FindPlayerFromChannel(channel);
+            index = message.split(' ')[2];
+            zoneIndex = message.split(' ')[1];
+            SearchPlayer(person.aliases[0]).then(p =>
+                SearchPlayerMap(p)
+                    .then(map => {
+                        PlayerOrTimeSearch(command, map, person.aliases[0], index, classResponse, 'course', zoneIndex)
+                    })
+            );
         }
-        if (searchTerm == '') {
-            searchTerm = FindPlayerFromChannel(channel).aliases[0];
+        else {
+            if (map == undefined) {
+                map = ClosestsName(message.split(' ')[3]);
+                searchTerm = message.split(' ')[1];
+                index = message.split(' ')[1] - 0;
+            }
+            if (searchTerm == '') {
+                searchTerm = FindPlayerFromChannel(channel).aliases[0];
+            }
+            PlayerOrTimeSearch(command, map, searchTerm, index, classResponse, 'course', zoneIndex)
         }
-        PlayerOrTimeSearch(command, map, searchTerm, index, classResponse, 'course', zoneIndex)
+
     }
     if (CommandIs('!scwr') || CommandIs('!dcwr')) {
         var map = ClosestsName(commandMap);
@@ -321,7 +355,7 @@ client.on("chat", (channel, userstate, message, self) => {
         else {
             var person = FindPlayerFromChannel(channel);
             SearchPlayer(person.aliases[0]).then(p =>
-                SearchPlayerMap(p)
+                SearchPlayerMap(p).then(map => MapInfo(map))
             );
         }
     }
@@ -332,7 +366,7 @@ client.on("chat", (channel, userstate, message, self) => {
         var searchTerm = message.split(' ').slice(1).join(' ');
         SearchPlayer(searchTerm).then(player => {
             if (player) {
-                SearchPlayerMap(player);
+                SearchPlayerMap(player).then(map => MapInfo(map));
             }
             else {
                 client.say(channel, 'No person found');
