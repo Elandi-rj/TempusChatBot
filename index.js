@@ -245,6 +245,9 @@ client.on("chat", (channel, userstate, message, self) => {
             searchTerm = message.split(' ')[1];
             index = message.split(' ')[1] - 0;
         }
+        if (searchTerm == '') {
+            searchTerm = FindPlayerFromChannel(channel).aliases[0];
+        }
         PlayerOrTimeSearch(command, map, searchTerm, index, classResponse, 'map', 1)
     }
     if (CommandIs('!swr') || CommandIs('!dwr')) {
@@ -264,6 +267,9 @@ client.on("chat", (channel, userstate, message, self) => {
             searchTerm = message.split(' ')[1];
             index = message.split(' ')[1] - 0;
         }
+        if (searchTerm == '') {
+            searchTerm = FindPlayerFromChannel(channel).aliases[0];
+        }
         PlayerOrTimeSearch(command, map, searchTerm, index, classResponse, 'bonus', zoneIndex)
     }
     if (CommandIs('!sbwr') || CommandIs('!dbwr')) {
@@ -282,6 +288,9 @@ client.on("chat", (channel, userstate, message, self) => {
             map = ClosestsName(message.split(' ')[3]);
             searchTerm = message.split(' ')[1];
             index = message.split(' ')[1] - 0;
+        }
+        if (searchTerm == '') {
+            searchTerm = FindPlayerFromChannel(channel).aliases[0];
         }
         PlayerOrTimeSearch(command, map, searchTerm, index, classResponse, 'course', zoneIndex)
     }
