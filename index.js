@@ -153,20 +153,28 @@ client.on("chat", (channel, userstate, message, self) => {
             .then(response => {
                 var person = response.data;
                 var rank = '';
+                var rankType = '';
+                var points = '';
                 switch (type) {
                     case 'class/3':
-                        rank = `${person.class_rank_info['3'].rank} (Solly)`;
+                        rank = person.class_rank_info['3'].rank;
+                        rankType = '(Soldier)';
+                        points = person.class_rank_info['3'].points;
                         break;
                     case 'class/4':
-                        rank = `${person.class_rank_info['4'].rank} (Demo)`;
+                        rank = person.class_rank_info['4'].rank;
+                        rankType = '(Demoman)';
+                        points = person.class_rank_info['4'].points;
                         break;
                     case 'overall':
-                        rank = `${person.rank_info.rank} (Overall)`;
+                        rank = person.rank_info.rank;
+                        rankType = '(Overall)'
+                        points = person.rank_info.points;
                         break;
                     default:
                         break;
                 }
-                client.say(channel, `${player.name} is ranked ${rank}`);
+                client.say(channel, `${rankType} ${player.name} is ranked ${rank} with ${points} points`);
             })
             .catch(error => {
                 client.say(channel, error.response.data.error);
@@ -180,21 +188,23 @@ client.on("chat", (channel, userstate, message, self) => {
             .then(response => {
                 person = response.data.players[0];
                 if (person) {
-                    var rank = '';
+                    var rank = person.rank;
+                    var rankType = '';
+                    var points = person.points
                     switch (type) {
                         case 'class/3':
-                            rank = `${person.rank} (Solly)`;
+                            rankType = '(Soldier)';
                             break;
                         case 'class/4':
-                            rank = `${person.rank} (Demo)`;
+                            rankType = '(Demoman)';
                             break;
                         case 'overall':
-                            rank = `${person.rank} (Overall)`;
+                            rankType = '(Overall)'
                             break;
                         default:
                             break;
                     }
-                    client.say(channel, `${person.name} is ranked ${rank}`);
+                    client.say(channel, `${rankType} ${person.name} is ranked ${rank} with ${points} points`);
                 }
                 else {
                     client.say(channel, `No person found`);
@@ -439,10 +449,13 @@ client.on("chat", (channel, userstate, message, self) => {
         if (!CommandIs('!rank')) {
             type = CommandIs('!srank') ? 'class/3' : 'class/4';
         }
-        if (!isNaN(searchTerm - 0)) {
+        if (!isNaN(searchTerm - 0) && index != undefined) {
             SearchRank(index, type);
         }
         else {
+            if (index == undefined) {
+                searchTerm = FindPlayerFromChannel(channel).aliases[0];
+            }
             SearchPlayer(searchTerm)
                 .then(player => {
                     if (player) {
