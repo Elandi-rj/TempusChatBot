@@ -301,7 +301,7 @@ client.on("chat", (channel, userstate, message, self) => {
         var searchTerm = message.split(' ').slice(3).join(' ');
         var zoneIndex = message.split(' ')[2];
         var classResponse = CommandIs('!sbtime') ? 'soldier' : 'demoman';
-        if (commandMap == undefined || !isNaN(commandMap) || !isNaN(message.split(' ')[2] - 0)) {
+        if (!isNaN(commandMap - 0) && message.split(' ')[3] == undefined) {
             var person = FindPlayerFromChannel(channel);
             index = message.split(' ')[2];
             zoneIndex = message.split(' ')[1];
@@ -355,7 +355,7 @@ client.on("chat", (channel, userstate, message, self) => {
         var searchTerm = message.split(' ').slice(3).join(' ');
         var zoneIndex = message.split(' ')[2];
         var classResponse = CommandIs('!sctime') ? 'soldier' : 'demoman';
-        if (commandMap == undefined || !isNaN(commandMap) || !isNaN(message.split(' ')[2] - 0)) {
+        if (!isNaN(commandMap - 0) && message.split(' ')[3] == undefined) {
             var person = FindPlayerFromChannel(channel);
             index = message.split(' ')[2];
             zoneIndex = message.split(' ')[1];
