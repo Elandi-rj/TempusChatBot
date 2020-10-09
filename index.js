@@ -128,6 +128,22 @@ client.on("chat", (channel, userstate, message, self) => {
                 client.say(channel, error.response.data.error);
             })
     }
+    function AuthorInfo(searchTerm) {
+        var query = `https://tempus.xyz/api/maps/name/${searchTerm}/fullOverview`
+        console.log(query);
+        axios.get(query)
+            .then(function (response) {
+                var data = response.data
+                var mapName = data.map_info.name
+                var authors = '';
+                data.authors.forEach(author => authors += author.name + ', ');
+                client.say(channel, `${mapName} by ${authors.slice(0, -2)}`);
+            })
+            .catch(function (error) {
+                // handle error
+                client.say(channel, error.response.data.error);
+            })
+    }
     async function SearchPlayerMap(player) {
         var query = `https://tempus.xyz/api/servers/statusList`;
         return await axios.get(query).then(response => {
@@ -425,6 +441,28 @@ client.on("chat", (channel, userstate, message, self) => {
             var person = FindPlayerFromChannel(channel);
             SearchPlayer(person.aliases[0]).then(p =>
                 SearchPlayerMap(p).then(map => MapInfo(map))
+            );
+        }
+    }
+    if (CommandIs('!authors')) {
+        if (commandMap) {
+            if (commandMap === 'p' || commandMap === 'jump_p') { //stop naming your maps with letters ;/
+                client.say(channel, 'jump_p by bshear');
+            }
+            else {
+                var map = ClosestsName(commandMap);
+                if (map) {
+                    AuthorInfo(map);
+                }
+                else {
+                    client.say(channel, 'Map not found');
+                }
+            }
+        }
+        else {
+            var person = FindPlayerFromChannel(channel);
+            SearchPlayer(person.aliases[0]).then(p =>
+                SearchPlayerMap(p).then(map => AuthorInfo(map))
             );
         }
     }
