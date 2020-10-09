@@ -507,12 +507,26 @@ client.on("chat", (channel, userstate, message, self) => {
     }
     if (CommandIs('!svid') || CommandIs('!dvid')) {
         var map = ClosestsName(commandMap);
-        if (map) {
-            var classResponse = CommandIs('!svid') ? 'soldier' : 'demoman';
-            MapVideo(map, classResponse)
+        var classResponse = CommandIs('!svid') ? 'soldier' : 'demoman';
+        if (commandMap == undefined) {
+            SearchPlayer(FindPlayerFromChannel(channel).aliases[0]).then(p =>
+                SearchPlayerMap(p)
+                    .then(map => {
+                        if (map) {
+                            MapVideo(map, classResponse)
+                        }
+                        else {
+                            client.say(channel, 'Map not found');
+                        }
+                    })
+            );
         }
         else {
-            client.say(channel, 'Map not found');
+            if (map)
+                MapVideo(map, classResponse)
+            else {
+                client.say(channel, 'Map not found');
+            }
         }
     }
     if (CommandIs('!voteparty')) {
