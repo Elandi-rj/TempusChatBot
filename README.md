@@ -1,6 +1,16 @@
 # TempusChatBot
- chat bot that interfaces with the tempus api for twitch commands
+ chat bot that interfaces with the tempus api for twitch commands that emulate a lot of the functionality found in a tempus server
 
+# Setup Guide 
+ 1. Download and install <a href="https://nodejs.org/en/">Node.js</a> <br>
+ 2. Download the project <a href="https://github.com/Elandi-rj/TempusChatBot/archive/master.zip">here</a> and unzip it anywhere <br>
+ 3. Open <b>options.js</b> with any text editor and replace <b>YourBotTwitchName</b> with the twitch channel name for the bot to use and don't get rid of the quotes here or anywhere else
+ 4. Replace <b>oauth:twitchAuthKey</b> with the key for your bot channel, which can be found <a href="https://twitchapps.com/tmi/">here</a> <br>
+ 5. You can place the bot in any channel you'd like by replacing elandi with your twitch channel name, it's also possible to run the bot in multiple channels at once 
+ like this. <br> channels: ['elandi', 'boshytf', 'arvinge']
+ 6. Open <b>players.js</b> with a text editor and if your name and channel isn't on the list already, add a new entry following the first example. <br><b>alias</b> can be any name/nickname's you want, <br><b>id</b> is your tempus id which you can either find in game on a tempus server or go to https://tempus.xyz/ and search for your profile, your id will be in the URL after players/ for example https://tempus.xyz/players/170674/overall this is my profile and the number is my id. <br>in <b>channel</b> type your twitch channel name
+ 7. Finally you can start the bot by running <b>start.bat</b>, and type <b>!update</b> in twitch with the bot on, it will take a few seconds to finish, any time tempus adds new maps you will need to run this command again. Bot should be fully functional now.
+ 
 # CurrentCommands (replace s with d for demo commands)
  !playing playerName <br>
  !srank playerName <br>
