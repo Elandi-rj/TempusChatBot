@@ -109,7 +109,10 @@ client.on("chat", (channel, userstate, message, self) => {
                 //Tempus | Solly T6 | Demo T4 | 2 bonuses
                 var data = response.data
                 var mapName = data.map_info.name
-                var author = data.authors.length > 1 ? 'multiple authors' : data.authors[0].name;
+                var author = "";
+                if (data.authors[0]) {
+                    author = data.authors.length > 1 ? ' by multiple authors' : ' by ' + data.authors[0].name;
+                }
                 var mapTiers = `Solly T${data.tier_info.soldier} | Demo T${data.tier_info.demoman}`;
                 var bonus = '';
                 var course = '';
@@ -121,7 +124,7 @@ client.on("chat", (channel, userstate, message, self) => {
                 if (courseData) {
                     course = courseData > 1 ? ` | ${courseData} courses` : ` | 1 course`;
                 }
-                client.say(channel, `${mapName} by ${author}, ${mapTiers}${course}${bonus}`);
+                client.say(channel, `${mapName}${author}, ${mapTiers}${course}${bonus}`);
             })
             .catch(function (error) {
                 // handle error
@@ -136,8 +139,13 @@ client.on("chat", (channel, userstate, message, self) => {
                 var data = response.data
                 var mapName = data.map_info.name
                 var authors = '';
-                data.authors.forEach(author => authors += author.name + ', ');
-                client.say(channel, `${mapName} by ${authors.slice(0, -2)}`);
+                if (data.authors[0]) {
+                    data.authors.forEach(author => authors += author.name + ', ');
+                    client.say(channel, `${mapName} by ${authors.slice(0, -2)}`);
+                }
+                else {
+                    client.say(channel, `${mapName}, no authors found`);
+                }
             })
             .catch(function (error) {
                 // handle error
