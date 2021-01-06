@@ -26,6 +26,7 @@
  !m mapName <br>
  !m <br>
  !svid mapName <br>
+ !ssearch mapName <br>
  !sbtime bonusIndex <br>
  !sbtime mapName bonusIndex <br>
  !sbtime mapName bonusIndex rankIndex <br>
@@ -58,6 +59,8 @@
  output: jump_simplified_rc1 by Niirvash, Solly T4 | Demo T4 <br>
  !svid simplified <br>
  output: (Solly) jump_simplified_rc1 https://www.youtube.com/watch?v=sWu2dGTDM-o <br>
+ !ssearch sketchy2<br>
+ output: https://www.youtube.com/results?search_query=jump_sketchy2_rc1_zip+-+02:10.050 (Boshy) <br>
  !sbtime when 3 2 <br>
  output: (Solly) Makly is ranked 2 on jump_when_b2_fix bonus 3 with time: 0:19.82 <br>
  !sbtime simply 1 steve <br>

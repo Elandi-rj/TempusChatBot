@@ -4,9 +4,9 @@ const axios = require('axios');
 const ClosestsName = require('./utilities.js').ClosestsName;
 const UpdateMapNames = require('./utilities.js').UpdateMapNames;
 const secondsToTimeFormat = require('./utilities.js').secondsToTimeFormat;
+const secondsToTimeStamp = require('./utilities.js').secondsToTimeStamp
 const FindPlayer = require('./players').FindPlayer;
 const FindPlayerFromChannel = require('./players').FindPlayerFromChannel;
-
 const client = new tmi.client(options);
 client.connect();
 
@@ -267,6 +267,19 @@ client.on("chat", (channel, userstate, message, self) => {
                     }
                 });
         }
+    }
+    function YoutubeSearch(map, classResponse) {
+        var query = `https://tempus.xyz/api/maps/name/${map}/zones/typeindex/map/1/records/list?start=1&limit=1`
+        var seconds;
+        var time;
+        axios.get(query)
+            .then(function (response) {
+                seconds = response.data.results[classResponse][0].duration;
+                var player = response.data.results[classResponse][0].name;
+                time = secondsToTimeStamp(seconds);
+                var sr = `https://www.youtube.com/results?search_query=${map}+-+${time} (${player})`;
+                client.say(channel, sr);
+            });
     }
 
     if (CommandIs('!stime') || CommandIs('!dtime')) {
@@ -532,6 +545,31 @@ client.on("chat", (channel, userstate, message, self) => {
         else {
             if (map)
                 MapVideo(map, classResponse)
+            else {
+                client.say(channel, 'Map not found');
+            }
+        }
+    }
+    if (CommandIs('!ssearch') || CommandIs('!dsearch')) {
+        var classResponse = CommandIs('!ssearch') ? 'soldier' : 'demoman';
+        var map = ClosestsName(commandMap);
+        if (commandMap == undefined) {
+            SearchPlayer(FindPlayerFromChannel(channel).aliases[0]).then(p =>
+                SearchPlayerMap(p)
+                    .then(map => {
+                        if (map) {
+                            YoutubeSearch(map, classResponse)
+                        }
+                        else {
+                            client.say(channel, 'Map not found');
+                        }
+                    })
+            );
+        }
+        else {
+            if (map) {
+                YoutubeSearch(map, classResponse)
+            }
             else {
                 client.say(channel, 'Map not found');
             }

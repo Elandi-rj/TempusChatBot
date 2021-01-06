@@ -32,6 +32,37 @@ function ClosestsName(queryName) {
     }
     return foundMap;
 }
+function secondsToTimeStamp(seconds) { //Larry's
+    var sign = "";
+    if (seconds < 0) {
+        sign = "-";
+    }
+    seconds = Math.abs(seconds);
+
+    var hours = Math.floor(seconds / 3600);
+    var minutes = Math.floor((seconds % 3600) / 60);
+    var milliseconds = Math.floor((seconds - Math.floor(seconds)) * 1000);
+    seconds = Math.floor(seconds % 60);
+
+    var timeStamp = sign;
+
+    if (hours > 0) {
+        if (hours >= 10) timeStamp += hours + ":";
+        else timeStamp += "0" + hours + ":";
+    }
+
+    if (minutes >= 10) timeStamp += minutes + ":";
+    else timeStamp += "0" + minutes + ":";
+
+    if (seconds >= 10) timeStamp += seconds + ".";
+    else timeStamp += "0" + seconds + ".";
+
+    if (milliseconds >= 100) timeStamp += milliseconds;
+    else if (milliseconds >= 10) timeStamp += "0" + milliseconds;
+    else timeStamp += "00" + milliseconds;
+
+    return timeStamp;
+}
 function secondsToTimeFormat(time) {
     // Hours, minutes and seconds
     var hrs = ~~(time / 3600);
@@ -52,3 +83,4 @@ function secondsToTimeFormat(time) {
 exports.ClosestsName = ClosestsName;
 exports.UpdateMapNames = UpdateMapNames;
 exports.secondsToTimeFormat = secondsToTimeFormat;
+exports.secondsToTimeStamp = secondsToTimeStamp;
