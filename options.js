@@ -8,7 +8,7 @@ const options = {
     identity: {
         username: "YourBotTwitchName",
         password: "oauth:twitchAuthKey",
-        youtubeApi: "YotubeApiKey"
+        youtubeApi: "YoutubeApiKey"
     },
     channels: ['elandi']
 };
