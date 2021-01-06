@@ -7,6 +7,7 @@ const secondsToTimeFormat = require('./utilities.js').secondsToTimeFormat;
 const secondsToTimeStamp = require('./utilities.js').secondsToTimeStamp
 const FindPlayer = require('./players').FindPlayer;
 const FindPlayerFromChannel = require('./players').FindPlayerFromChannel;
+const FindTempusRecordPlayer = require('./players').FindTempusRecordPlayer;
 const client = new tmi.client(options);
 client.connect();
 
@@ -247,7 +248,7 @@ client.on("chat", (channel, userstate, message, self) => {
                     client.say(channel, msg);
                 }
                 else {
-                    client.say(channel, 'no video found');
+                    client.say(channel, 'No video found');
                 }
 
             })
@@ -270,15 +271,32 @@ client.on("chat", (channel, userstate, message, self) => {
     }
     function YoutubeSearch(map, classResponse) {
         var query = `https://tempus.xyz/api/maps/name/${map}/zones/typeindex/map/1/records/list?start=1&limit=1`
-        var seconds;
-        var time;
         axios.get(query)
             .then(function (response) {
-                seconds = response.data.results[classResponse][0].duration;
-                var player = response.data.results[classResponse][0].name;
-                time = secondsToTimeStamp(seconds);
-                var sr = `https://www.youtube.com/results?search_query=${map}+-+${time} (${player})`;
-                client.say(channel, sr);
+                var seconds = response.data.results[classResponse][0].duration;
+                var steamId = response.data.results[classResponse][0].steamid;
+                var tempusRecordsNickName = FindTempusRecordPlayer(steamId).name;
+                var time = secondsToTimeStamp(seconds);
+                if (options.identity.youtubeApi) {
+                    var sQuery = `https://www.googleapis.com/youtube/v3/search?part=snippet&key=${options.identity.youtubeApi}=&type=video&q=${tempusRecordsNickName}+on+${map}+-+${time}&maxResults=1`;
+                    axios.get(sQuery)
+                        .then(function (yotubeResponse) {
+                            if (yotubeResponse.data.items[0]) {
+                                var link = `https://www.youtube.com/watch?v=${yotubeResponse.data.items[0].id.videoId} (${tempusRecordsNickName} ${time})`;
+                                client.say(channel, link);
+                            }
+                            else {
+                                var link = `https://www.youtube.com/results?search_query=${tempusRecordsNickName}+on+${map}+-+ (no exact match found for ${tempusRecordsNickName} ${time})`;
+                                client.say(channel, link);
+                            }
+                        }).catch(error => {
+                            console.log(error);
+                            throw error;
+                        });
+                } else {
+                    var link = `https://www.youtube.com/results?search_query=${tempusRecordsNickName}+on+${map}+-+${time} (${tempusRecordsNickName} ${time})`;
+                    client.say(channel, link);
+                }
             });
     }
 
@@ -497,7 +515,7 @@ client.on("chat", (channel, userstate, message, self) => {
                 SearchPlayerMap(player).then(map => MapInfo(map));
             }
             else {
-                client.say(channel, 'No person found');
+                client.say(channel, 'No person was found');
             }
         })
     }

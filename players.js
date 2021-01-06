@@ -85,6 +85,7 @@ players = [
     {
         aliases: ['soup'],
         id: 2220,
+        channel: 'souptt',
     },
     {
         aliases: ['starkie'],
@@ -95,6 +96,14 @@ players = [
         id: 196930,
     },
 ]
+
+function FindTempusRecordPlayer(Id) {
+    const fs = require('fs');
+    let nicknames = JSON.parse(fs.readFileSync('./nicknames.json'));
+    return nicknames.find(p =>
+        p.steamId == Id
+    );
+}
 function FindPlayer(name) {
     return players.find(p =>
         p.aliases.find(alias =>
@@ -107,5 +116,6 @@ function FindPlayerFromChannel(channelName) {
         '#' + p.channel == channelName
     );
 }
+exports.FindTempusRecordPlayer = FindTempusRecordPlayer;
 exports.FindPlayer = FindPlayer;
 exports.FindPlayerFromChannel = FindPlayerFromChannel;
