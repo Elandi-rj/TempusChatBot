@@ -275,7 +275,10 @@ client.on("chat", (channel, userstate, message, self) => {
             .then(function (response) {
                 var seconds = response.data.results[classResponse][0].duration;
                 var steamId = response.data.results[classResponse][0].steamid;
-                var tempusRecordsNickName = FindTempusRecordPlayer(steamId).name;
+                var tempusRecordsNickName = '';
+                if (FindTempusRecordPlayer(steamId)) {
+                    tempusRecordsNickName = FindTempusRecordPlayer(steamId).name
+                }
                 var time = secondsToTimeStamp(seconds);
                 if (options.identity.youtubeApi) {
                     var sQuery = `https://www.googleapis.com/youtube/v3/search?part=snippet&key=${options.identity.youtubeApi}=&type=video&q=${tempusRecordsNickName}+on+${map}+-+${time}&maxResults=1`;
