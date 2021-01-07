@@ -289,7 +289,7 @@ client.on("chat", (channel, userstate, message, self) => {
                 if (seconds < 60 && date < 1546616086.1247716) {
                     time = time.slice(3);
                 }
-                if (options.identity.youtubeApi) {
+                if (options.identity.youtubeApi && options.identity.youtubeApi != 'YoutubeApiKey') {
                     var tempusRecordsChannelId = 'UC3dQqjaLsbiqQE0QSWl1Wfg';
                     var sQuery = `https://www.googleapis.com/youtube/v3/search?key=${options.identity.youtubeApi}&channelId=${tempusRecordsChannelId}&part=snippet,id&type=video&maxResults=1&q=${tempusRecordsNickName}+on+${map}+-+${time}`;
                     console.log(sQuery)
