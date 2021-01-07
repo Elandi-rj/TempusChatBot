@@ -32,6 +32,12 @@ function ClosestsName(queryName) {
     }
     return foundMap;
 }
+function StripVersion(map) {
+    var pattern = /(_rc|_v|_b|_a)[0-9]\w{0,}/g;
+    if (pattern.test(map)) {
+        return map.replace(pattern, '');
+    }
+}
 function secondsToTimeStamp(seconds) { //Larry's
     var sign = "";
     if (seconds < 0) {
@@ -81,6 +87,7 @@ function secondsToTimeFormat(time) {
     return ret;
 }
 exports.ClosestsName = ClosestsName;
+exports.StripVersion = StripVersion;
 exports.UpdateMapNames = UpdateMapNames;
 exports.secondsToTimeFormat = secondsToTimeFormat;
 exports.secondsToTimeStamp = secondsToTimeStamp;

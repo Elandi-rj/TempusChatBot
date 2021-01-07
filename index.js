@@ -2,6 +2,7 @@ const tmi = require("tmi.js");
 const options = require("./options"); //Your options file
 const axios = require('axios');
 const ClosestsName = require('./utilities.js').ClosestsName;
+const StripVersion = require('./utilities.js').StripVersion;
 const UpdateMapNames = require('./utilities.js').UpdateMapNames;
 const secondsToTimeFormat = require('./utilities.js').secondsToTimeFormat;
 const secondsToTimeStamp = require('./utilities.js').secondsToTimeStamp
@@ -270,34 +271,55 @@ client.on("chat", (channel, userstate, message, self) => {
         }
     }
     function YoutubeSearch(map, classResponse) {
-        var query = `https://tempus.xyz/api/maps/name/${map}/zones/typeindex/map/1/records/list?start=1&limit=1`
+        var query = `https://tempus.xyz/api/maps/name/${map}/zones/typeindex/map/1/records/list?start=1&limit=1`;
         axios.get(query)
             .then(function (response) {
                 var seconds = response.data.results[classResponse][0].duration;
                 var steamId = response.data.results[classResponse][0].steamid;
+                var name = '';
                 var tempusRecordsNickName = '';
+                var date = response.data.results[classResponse][0].date;
                 if (FindTempusRecordPlayer(steamId)) {
-                    tempusRecordsNickName = FindTempusRecordPlayer(steamId).name
+                    tempusRecordsNickName = FindTempusRecordPlayer(steamId).name;
+                }
+                else {
+                    name = response.data.results[classResponse][0].name;
                 }
                 var time = secondsToTimeStamp(seconds);
+                if (seconds < 60 && date < 1546616086.1247716) {
+                    time = time.slice(3);
+                }
                 if (options.identity.youtubeApi) {
-                    var sQuery = `https://www.googleapis.com/youtube/v3/search?part=snippet&key=${options.identity.youtubeApi}=&type=video&q=${tempusRecordsNickName}+on+${map}+-+${time}&maxResults=1`;
+                    var tempusRecordsChannelId = 'UC3dQqjaLsbiqQE0QSWl1Wfg';
+                    var sQuery = `https://www.googleapis.com/youtube/v3/search?key=${options.identity.youtubeApi}&channelId=${tempusRecordsChannelId}&part=snippet,id&type=video&maxResults=1&q=${tempusRecordsNickName}+on+${map}+-+${time}`;
+                    console.log(sQuery)
                     axios.get(sQuery)
-                        .then(function (yotubeResponse) {
-                            if (yotubeResponse.data.items[0]) {
-                                var link = `https://www.youtube.com/watch?v=${yotubeResponse.data.items[0].id.videoId} (${tempusRecordsNickName} ${time})`;
+                        .then(function (youtubeResponse) {
+                            if (youtubeResponse.data.items[0]) {
+                                var link = `https://www.youtube.com/watch?v=${youtubeResponse.data.items[0].id.videoId} (${tempusRecordsNickName}${name} ${time})`;
                                 client.say(channel, link);
                             }
                             else {
-                                var link = `https://www.youtube.com/results?search_query=${tempusRecordsNickName}+on+${map}+-+ (no exact match found for ${tempusRecordsNickName} ${time})`;
-                                client.say(channel, link);
+                                map = StripVersion(map);
+                                axios.get(sQuery)
+                                    .then(function (backupResponse) {
+                                        if (backupResponse.data.items[0]) {
+                                            var link = `https://www.youtube.com/watch?v=${backupResponse.data.items[0].id.videoId} (${tempusRecordsNickName}${name} ${time})`;
+                                            client.say(channel, link);
+                                        }
+                                        else {
+                                            var link = `https://www.youtube.com/results?search_query=${tempusRecordsNickName}+on+${map}+-+${time} (no exact match found for ${tempusRecordsNickName}${name} ${time})`;
+                                            client.say(channel, link);
+                                        }
+                                    })
                             }
                         }).catch(error => {
-                            console.log(error);
+                            var link = `https://www.youtube.com/results?search_query=${tempusRecordsNickName}+on+${map}+-+${time}`;
+                            client.say(channel, link + ' (api quota was exceeded)');
                             throw error;
-                        });
+                        })
                 } else {
-                    var link = `https://www.youtube.com/results?search_query=${tempusRecordsNickName}+on+${map}+-+${time} (${tempusRecordsNickName} ${time})`;
+                    var link = `https://www.youtube.com/results?search_query=${tempusRecordsNickName}+on+${map}+-+${time} (${tempusRecordsNickName}${name} ${time})`;
                     client.say(channel, link);
                 }
             });
