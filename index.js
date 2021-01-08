@@ -280,7 +280,7 @@ client.on("chat", (channel, userstate, message, self) => {
                 var tempusRecordsNickName = '';
                 var date = response.data.results[classResponse][0].date;
                 if (FindTempusRecordPlayer(steamId)) {
-                    tempusRecordsNickName = FindTempusRecordPlayer(steamId).name;
+                    tempusRecordsNickName = FindTempusRecordPlayer(steamId).name.replace(' ', '+');
                 }
                 else {
                     name = response.data.results[classResponse][0].name;
