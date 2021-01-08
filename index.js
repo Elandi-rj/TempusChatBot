@@ -300,8 +300,9 @@ client.on("chat", (channel, userstate, message, self) => {
                                 client.say(channel, link);
                             }
                             else {
-                                map = StripVersion(map);
-                                axios.get(sQuery)
+                                strippedMap = StripVersion(map);
+                                var sBackupQuery = `https://www.googleapis.com/youtube/v3/search?key=${options.identity.youtubeApi}&channelId=${tempusRecordsChannelId}&part=snippet,id&type=video&maxResults=1&q=${tempusRecordsNickName}+on+${strippedMap}+-+${time}`;
+                                axios.get(sBackupQuery)
                                     .then(function (backupResponse) {
                                         if (backupResponse.data.items[0]) {
                                             var link = `https://www.youtube.com/watch?v=${backupResponse.data.items[0].id.videoId} (${tempusRecordsNickName}${name} ${time})`;
