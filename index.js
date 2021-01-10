@@ -296,7 +296,7 @@ client.on("chat", (channel, userstate, message, self) => {
                     axios.get(sQuery)
                         .then(function (youtubeResponse) {
                             if (youtubeResponse.data.items[0]) {
-                                var link = `https://www.youtube.com/watch?v=${youtubeResponse.data.items[0].id.videoId} (${tempusRecordsNickName}${name} ${time})`;
+                                var link = `https://www.youtube.com/watch?v=${youtubeResponse.data.items[0].id.videoId} (${tempusRecordsNickName}${name} on ${map} ${time})`;
                                 client.say(channel, link);
                             }
                             else {
@@ -305,11 +305,11 @@ client.on("chat", (channel, userstate, message, self) => {
                                 axios.get(sBackupQuery)
                                     .then(function (backupResponse) {
                                         if (backupResponse.data.items[0]) {
-                                            var link = `https://www.youtube.com/watch?v=${backupResponse.data.items[0].id.videoId} (${tempusRecordsNickName}${name} ${time})`;
+                                            var link = `https://www.youtube.com/watch?v=${backupResponse.data.items[0].id.videoId} (${tempusRecordsNickName}${name} on ${map} ${time})`;
                                             client.say(channel, link);
                                         }
                                         else {
-                                            var link = `https://www.youtube.com/results?search_query=${tempusRecordsNickName}+on+${map}+-+${time} (no exact match found for ${tempusRecordsNickName}${name} ${time})`;
+                                            var link = `https://www.youtube.com/results?search_query=${tempusRecordsNickName}+on+${map}+-+${time} (no exact match found for ${tempusRecordsNickName}${name} on ${map} ${time})`;
                                             client.say(channel, link);
                                         }
                                     })
@@ -320,7 +320,7 @@ client.on("chat", (channel, userstate, message, self) => {
                             throw error;
                         })
                 } else {
-                    var link = `https://www.youtube.com/results?search_query=${tempusRecordsNickName}+on+${map}+-+${time} (${tempusRecordsNickName}${name} ${time})`;
+                    var link = `https://www.youtube.com/results?search_query=${tempusRecordsNickName}+on+${map}+-+${time} (${tempusRecordsNickName}${name} on ${map} ${time})`;
                     client.say(channel, link);
                 }
             });
