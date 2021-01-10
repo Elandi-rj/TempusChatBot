@@ -5,6 +5,7 @@
  1. Download and install <a href="https://nodejs.org/en/">Node.js</a> <br>
  2. Download the project <a href="https://github.com/Elandi-rj/TempusChatBot/archive/master.zip">here</a> and unzip it anywhere <br>
  3. Open <b>options.js</b> with any text editor and replace <b>YourBotTwitchName</b> with the twitch channel name for the bot to use and don't get rid of the quotes here or anywhere else
+ 4. (Optional) To make the ssearch command return a direct link you need a youtube data api. You can read about getting one <a href="https://developers.google.com/youtube/v3/getting-started">here</a> and put it in the options file. The command will still work without one but instead of a direct link, it will return a query link, so 1 extra click.
  4. Replace <b>oauth:twitchAuthKey</b> with the key for your bot channel, which can be found <a href="https://twitchapps.com/tmi/">here</a> <br>
  5. You can place the bot in any channel you'd like by replacing elandi with your twitch channel name, it's also possible to run the bot in multiple channels at once 
  like this. <br> channels: ['elandi', 'boshytf', 'arvinge']
