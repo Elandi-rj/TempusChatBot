@@ -325,6 +325,30 @@ client.on("chat", (channel, userstate, message, self) => {
                 }
             });
     }
+    function CourseYoutubeSearch(map) {
+        if (options.identity.youtubeApi && options.identity.youtubeApi != 'YoutubeApiKey') {
+            var tempusRecordsChannelId = 'UC3dQqjaLsbiqQE0QSWl1Wfg';
+            var sQuery = `https://www.googleapis.com/youtube/v3/search?key=${options.identity.youtubeApi}&channelId=${tempusRecordsChannelId}&part=snippet,id&type=video&maxResults=1&q=${map}+course+collection`;
+            console.log(sQuery)
+            var defaultLink = `https://www.youtube.com/results?search_query=${map}+course+collection`;
+            axios.get(sQuery)
+                .then(function (youtubeResponse) {
+                    if (youtubeResponse.data.items[0].snippet.title == `${map} course collection`) {
+                        var link = `https://www.youtube.com/watch?v=${youtubeResponse.data.items[0].id.videoId} (${map} course collection)`;
+                        client.say(channel, link);
+                    }
+                    else {
+                        var link = `${defaultLink} (no exact match found for ${map})`;
+                        client.say(channel, link);
+                    }
+                }).catch(error => {
+                    client.say(channel, defaultLink + ' (api quota was exceeded)');
+                    throw error;
+                })
+        } else {
+            client.say(channel, defaultLink);
+        }
+    }
 
     if (CommandIs('!stime') || CommandIs('!dtime')) {
         var map = ClosestsName(commandMap);
@@ -613,6 +637,30 @@ client.on("chat", (channel, userstate, message, self) => {
         else {
             if (map) {
                 YoutubeSearch(map, classResponse)
+            }
+            else {
+                client.say(channel, 'Map not found');
+            }
+        }
+    }
+    if (CommandIs('!coursecollection') || CommandIs('!cc')) {
+        var map = ClosestsName(commandMap);
+        if (commandMap == undefined) {
+            SearchPlayer(FindPlayerFromChannel(channel).aliases[0]).then(p =>
+                SearchPlayerMap(p)
+                    .then(map => {
+                        if (map) {
+                            CourseYoutubeSearch(map)
+                        }
+                        else {
+                            client.say(channel, 'Map not found');
+                        }
+                    })
+            );
+        }
+        else {
+            if (map) {
+                CourseYoutubeSearch(map)
             }
             else {
                 client.say(channel, 'Map not found');
