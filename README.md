@@ -38,8 +38,10 @@
  !sctime mapName courseIndex <br>
  !sctime mapName courseIndex rankIndex <br>
  !sctime mapName courseIndex playerName <br>
- !scc (or !coursesearch) <br>
- !update (broadcaster only to update mapNames file any time new maps are added to tempus) <br>
+ !cc (or !coursesearch) <br>
+ !update (streamer only to update the map list any time new maps are added to tempus) <br>
+ !tempusenable (mod/streamer only) <br>
+ !tempusdisable (mod/streamer only) <br>
  !tempuscommands <br>
 
 # Examples
@@ -75,5 +77,5 @@
  output: (Solly) steve is ranked 124/1295 on jump_4starters_rc1 course 5 with time: 2:55.85 <br>
  !sctime 4starters 5 3 <br>
  output: (Solly) Carter is ranked 3 on jump_4starters_rc1 course 5 with time: 1:35.42 <br>
- !scc (!coursesearch) 4starters <br>
+ !cc (!coursesearch) 4starters <br>
  output: https://www.youtube.com/watch?v=xKF4imgDEY8 (jump_4starters_rc1 course collection) <br>

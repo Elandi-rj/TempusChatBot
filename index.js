@@ -6,6 +6,7 @@ const StripVersion = require('./utilities.js').StripVersion;
 const UpdateMapNames = require('./utilities.js').UpdateMapNames;
 const secondsToTimeFormat = require('./utilities.js').secondsToTimeFormat;
 const secondsToTimeStamp = require('./utilities.js').secondsToTimeStamp
+const Disabled = require('./utilities.js').Disabled;
 const FindPlayer = require('./players').FindPlayer;
 const FindPlayerFromChannel = require('./players').FindPlayerFromChannel;
 const FindTempusRecordPlayer = require('./players').FindTempusRecordPlayer;
@@ -24,10 +25,24 @@ client.on("chat", (channel, userstate, message, self) => {
     if (message.split(' ')[1]) {
         commandMap = commandMap.toLowerCase();
     }
-
-
     function CommandIs(msg) {
         return command.toLowerCase() === msg;
+    }
+    if (CommandIs('!tempusdisable') && ("#" + userstate.username === channel || userstate.mod)) {
+        let result = Disabled.Add(channel);
+        if (result) {
+            client.say(channel, '/me is going to sleep..zzz')
+        }
+    }
+    if (CommandIs('!tempusenable') && ("#" + userstate.username === channel || userstate.mod)) {
+        let result = Disabled.Remove(channel);
+        if (result) {
+            client.say(channel, '/me has awoken')
+        }
+    }
+
+    if (Disabled.Find(channel)) {
+        return;
     }
     function SearchTime(map, classResponse, index, zoneType, zoneIndex) {
         if (index < 1 || isNaN(index)) { index = 1; }
@@ -555,7 +570,7 @@ client.on("chat", (channel, userstate, message, self) => {
             );
         }
     }
-    if (CommandIs('!update') && userstate.badges.broadcaster) {
+    if (CommandIs('!update') && "#" + userstate.username === channel) {
         UpdateMapNames();
     }
     if (CommandIs('!playing')) {

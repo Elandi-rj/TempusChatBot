@@ -1,4 +1,7 @@
-let mapNames = require('./MapNames').list;
+const fs = require('fs');
+let mapNames = JSON.parse(fs.readFileSync('./MapNames.json'));
+
+
 function UpdateMapNames() {
     var query = 'https://tempus.xyz/api/maps/detailedList';
     const axios = require('axios');
@@ -9,7 +12,7 @@ function UpdateMapNames() {
                 maps.push(element.name);
             });
             var fs = require('fs');
-            fs.writeFileSync('MapNames.js', 'exports.list =' + JSON.stringify(maps));
+            fs.writeFileSync('MapNames.json', JSON.stringify(maps));
             mapNames = maps;
             console.log('Map list has been updated!');
         })
@@ -86,8 +89,35 @@ function secondsToTimeFormat(time) {
     ret += "" + secs;
     return ret;
 }
+
+let Disabled = {
+    disabledList: [],
+    Find: function (channelName) {
+        return this.disabledList.find(name => name === channelName);
+    },
+    Add: function (channelName) {
+        if (this.disabledList.find(name => name === channelName)) {
+            return false;
+        }
+        else {
+            this.disabledList.push(channelName);
+            return true;
+        }
+    },
+    Remove: function (channelName) {
+        if (this.disabledList.find(name => name === channelName)) {
+            this.disabledList.splice(this.disabledList.indexOf(channelName), 1);
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+}
+
 exports.ClosestsName = ClosestsName;
 exports.StripVersion = StripVersion;
 exports.UpdateMapNames = UpdateMapNames;
 exports.secondsToTimeFormat = secondsToTimeFormat;
 exports.secondsToTimeStamp = secondsToTimeStamp;
+exports.Disabled = Disabled;
