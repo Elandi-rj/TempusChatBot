@@ -341,11 +341,11 @@ client.on("chat", (channel, userstate, message, self) => {
             });
     }
     function CourseYoutubeSearch(map) {
+        var defaultLink = `https://www.youtube.com/results?search_query=${map}+course+collection`;
         if (options.identity.youtubeApi && options.identity.youtubeApi != 'YoutubeApiKey') {
             var tempusRecordsChannelId = 'UC3dQqjaLsbiqQE0QSWl1Wfg';
             var sQuery = `https://www.googleapis.com/youtube/v3/search?key=${options.identity.youtubeApi}&channelId=${tempusRecordsChannelId}&part=snippet,id&type=video&maxResults=1&q=${map}+course+collection`;
             console.log(sQuery)
-            var defaultLink = `https://www.youtube.com/results?search_query=${map}+course+collection`;
             axios.get(sQuery)
                 .then(function (youtubeResponse) {
                     if (youtubeResponse.data.items[0].snippet.title == `${map} course collection`) {
