@@ -54,6 +54,10 @@ client.on("chat", (channel, userstate, message, self) => {
             .then(function (response) {
                 var data = response.data.results[classResponse][0];
                 if (data) {
+                    let TempusRecordPlayer = FindTempusRecordPlayer(data.steamid);
+                    if (TempusRecordPlayer) {
+                        data.name = TempusRecordPlayer.name;
+                    }
                     var time = secondsToTimeFormat(data.duration);
                     var zoneInfo = '';
                     if (zoneType != 'map') {
@@ -77,6 +81,12 @@ client.on("chat", (channel, userstate, message, self) => {
             var query = `https://tempus.xyz/api/players/id/${aliasPerson.id}/info`
             return await axios.get(query)
                 .then(response => {
+                    if (response.data) {
+                        let TempusRecordPlayer = FindTempusRecordPlayer(response.data.steamid);
+                        if (TempusRecordPlayer) {
+                            response.data.name = TempusRecordPlayer.name;
+                        }
+                    }
                     return response.data;
                 })
         }
@@ -85,6 +95,12 @@ client.on("chat", (channel, userstate, message, self) => {
             console.log(playerQuery);
             return await axios.get(playerQuery)
                 .then(p => {
+                    if (p.data.players[0]) {
+                        let TempusRecordPlayer = FindTempusRecordPlayer(p.data.players[0].steamid);
+                        if (TempusRecordPlayer) {
+                            p.data.players[0].name = TempusRecordPlayer.name;
+                        }
+                    }
                     return p.data.players[0];
                 })
                 .catch(error => {
@@ -101,6 +117,10 @@ client.on("chat", (channel, userstate, message, self) => {
             .then(function (response) {
                 var data = response.data.result;
                 if (data) {
+                    let TempusRecordPlayer = FindTempusRecordPlayer(data.steamid);
+                    if (TempusRecordPlayer) {
+                        data.name = TempusRecordPlayer.name;
+                    }
                     var time = secondsToTimeFormat(data.duration);
                     var zoneInfo = '';
                     if (zoneType != 'map') {

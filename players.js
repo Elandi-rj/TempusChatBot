@@ -10,6 +10,11 @@ players = [
         channel: 'elandi',
     },
     {
+        aliases: ['error', 'ewwow'],
+        id: 204,
+        channel: 'aorer',
+    },
+    {
         aliases: ['matty'],
         id: 1320,
         channel: 'au_matty',
@@ -72,6 +77,7 @@ players = [
     {
         aliases: ['superchuck'],
         id: 344,
+        channel: 'superchuck_',
     },
     {
         aliases: ['vice'],
@@ -94,6 +100,14 @@ players = [
     {
         aliases: ['deceptive'],
         id: 196930,
+    },
+    {
+        aliases: ['wild'],
+        id: 176220,
+    },
+    {
+        aliases: ['juup'],
+        id: 363721,
     },
 ]
 
