@@ -7,6 +7,7 @@ const UpdateMapNames = require('./utilities.js').UpdateMapNames;
 const secondsToTimeFormat = require('./utilities.js').secondsToTimeFormat;
 const secondsToTimeStamp = require('./utilities.js').secondsToTimeStamp
 const Disabled = require('./utilities.js').Disabled;
+const Random = require('./utilities.js').Random;
 const FindPlayer = require('./players').FindPlayer;
 const FindPlayerFromChannel = require('./players').FindPlayerFromChannel;
 const FindTempusRecordPlayer = require('./players').FindTempusRecordPlayer;
@@ -699,6 +700,27 @@ client.on("chat", (channel, userstate, message, self) => {
             }
             else {
                 client.say(channel, 'Map not found');
+            }
+        }
+    }
+    if (CommandIs('!random')) {
+        if (commandMap == undefined) {
+            let map = Random.Map();
+            client.say(channel, map);
+        }
+        else {
+            switch (commandMap) {
+                case 's': case 'soldier':
+                    client.say(channel, Random.ClassMap("soldier"))
+                    break;
+                case 'd': case 'demo': case 'demoman':
+                    client.say(channel, Random.ClassMap("demo"))
+                    break;
+                case 'b': case 'both':
+                    client.say(channel, Random.ClassMap("both"))
+                    break;
+                default:
+                    break;
             }
         }
     }

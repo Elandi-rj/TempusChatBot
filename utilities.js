@@ -35,6 +35,17 @@ function ClosestsName(queryName) {
     }
     return foundMap;
 }
+let Random = {
+    Map: function () {
+        let rand = Math.floor(Math.random() * mapNames.length);
+        return mapNames[rand];
+    },
+    ClassMap: function (className) {
+        let mapIntended = JSON.parse(fs.readFileSync('./MapIntended.json'));
+        let rand = Math.floor(Math.random() * mapIntended[className].length);
+        return mapIntended[className][rand];
+    }
+}
 function StripVersion(map) {
     var pattern = /(_rc|_v|_b|_a)[0-9]\w{0,}/g;
     if (pattern.test(map)) {
@@ -120,4 +131,5 @@ exports.StripVersion = StripVersion;
 exports.UpdateMapNames = UpdateMapNames;
 exports.secondsToTimeFormat = secondsToTimeFormat;
 exports.secondsToTimeStamp = secondsToTimeStamp;
+exports.Random = Random;
 exports.Disabled = Disabled;
