@@ -6,6 +6,7 @@ const StripVersion = require('./utilities.js').StripVersion;
 const UpdateMapNames = require('./utilities.js').UpdateMapNames;
 const secondsToTimeFormat = require('./utilities.js').secondsToTimeFormat;
 const secondsToTimeStamp = require('./utilities.js').secondsToTimeStamp
+const Intended = require('./utilities.js').Intended
 const Disabled = require('./utilities.js').Disabled;
 const Random = require('./utilities.js').Random;
 const FindPlayer = require('./players').FindPlayer;
@@ -162,7 +163,11 @@ client.on("chat", (channel, userstate, message, self) => {
                 if (courseData) {
                     course = courseData > 1 ? ` | ${courseData} courses` : ` | 1 course`;
                 }
-                client.say(channel, `${mapName}${author}, ${mapTiers}${course}${bonus}`);
+                var intended = Intended(mapName);
+                if (intended) {
+                    intended = intended.toUpperCase() + " | "
+                }
+                client.say(channel, `${intended}${mapName}${author}, ${mapTiers}${course}${bonus}`);
             })
             .catch(function (error) {
                 // handle error
@@ -550,7 +555,7 @@ client.on("chat", (channel, userstate, message, self) => {
     if (CommandIs('!m') || CommandIs('!mi')) {
         if (commandMap) {
             if (commandMap === 'p' || commandMap === 'jump_p') { //stop naming your maps with letters ;/
-                client.say(channel, 'jump_p by bshear, Solly T5 | Demo T5 | 1 bonus');
+                client.say(channel, 's, jump_p by bshear, Solly T5 | Demo T5 | 1 bonus');
             }
             else {
                 var map = ClosestsName(commandMap);
