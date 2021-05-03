@@ -39,6 +39,8 @@
  !sctime mapName courseIndex rankIndex <br>
  !sctime mapName courseIndex playerName <br>
  !cc (or !coursesearch) <br>
+ !random <br>
+ !random s <br>
  !update (streamer only to update the map list any time new maps are added to tempus) <br>
  !tempusenable (mod/streamer only) <br>
  !tempusdisable (mod/streamer only) <br>
