@@ -43,21 +43,16 @@ let Random = {
     ClassMap: function (className) {
         let mapIntended = JSON.parse(fs.readFileSync('./MapIntended.json'));
         let rand = Math.floor(Math.random() * mapIntended[className].length);
-        return mapIntended[className][rand].substring(2);
+        return mapIntended[className][rand];
     }
 }
 function Intended(map) {
-    let ListIntended = JSON.parse(fs.readFileSync('./MapIntended.json'));
-    var intended = '';
-    for (var classType in ListIntended) {
-        for (var mapIntended in ListIntended[classType]) {
-            if (ListIntended[classType][mapIntended].substring(2) == map) {
-                intended = ListIntended[classType][mapIntended].charAt(0);
-                break;
-            }
+    let mapIntended = JSON.parse(fs.readFileSync('./MapIntended.json'));
+    for (var classType in mapIntended) {
+        if (mapIntended[classType].includes(map)) {
+            return classType.charAt(0);
         }
     }
-    return intended;
 }
 function StripVersion(map) {
     var pattern = /(_rc|_v|_b|_a)[0-9]\w{0,}/g;
