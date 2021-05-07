@@ -1,7 +1,6 @@
 const fs = require('fs');
 let mapNames = JSON.parse(fs.readFileSync('./MapNames.json'));
 
-
 function UpdateMapNames() {
     var query = 'https://tempus.xyz/api/maps/detailedList';
     const axios = require('axios');
@@ -11,7 +10,21 @@ function UpdateMapNames() {
             response.data.forEach(element => {
                 maps.push(element.name);
             });
-            var fs = require('fs');
+            let currentMaps = JSON.parse(fs.readFileSync('./MapIntended.json'));
+            let notAdded = maps.filter(map => {
+                let missing = 0;
+                for (var classType in currentMaps) {
+                    if (currentMaps[classType].includes(map) == false) {
+                        missing++;
+                    }
+                }
+                if(missing > 3){
+                    return map;
+                }
+            })
+            currentMaps["unknown"].push(...notAdded);
+            fs.writeFileSync('MapIntended.json', JSON.stringify(currentMaps));
+            //todo: add commands to add and delete maps from MapIntended json
             fs.writeFileSync('MapNames.json', JSON.stringify(maps));
             mapNames = maps;
             console.log('Map list has been updated!');
