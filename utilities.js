@@ -24,7 +24,6 @@ function UpdateMapNames() {
             })
             currentMaps["unknown"].push(...notAdded);
             fs.writeFileSync('MapIntended.json', JSON.stringify(currentMaps));
-            //todo: add commands to add and delete maps from MapIntended json
             fs.writeFileSync('MapNames.json', JSON.stringify(maps));
             mapNames = maps;
             console.log('Map list has been updated!');
