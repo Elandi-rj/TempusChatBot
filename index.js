@@ -9,6 +9,7 @@ const secondsToTimeStamp = require('./utilities.js').secondsToTimeStamp
 const Intended = require('./utilities.js').Intended
 const Disabled = require('./utilities.js').Disabled;
 const Random = require('./utilities.js').Random;
+const Unknown = require('./utilities.js').Unknown;
 const FindPlayer = require('./players').FindPlayer;
 const FindPlayerFromChannel = require('./players').FindPlayerFromChannel;
 const FindTempusRecordPlayer = require('./players').FindTempusRecordPlayer;
@@ -598,6 +599,54 @@ client.on("chat", (channel, userstate, message, self) => {
     }
     if (CommandIs('!update') && "#" + userstate.username === channel) {
         UpdateMapNames();
+    }
+    if (CommandIs('!tierlist') && "#" + userstate.username === channel) {
+        if (Unknown.maps["unknown"].length > 1) {
+            let maps = Unknown.ListMaps();
+            client.say(channel, maps);
+        }
+        else {
+            client.say(channel, 'no unknown maps found');
+        }
+    }
+    if (CommandIs('!tieradd') && "#" + userstate.username === channel) {
+        let map = ClosestsName(message.split(' ')[1].toLowerCase());
+        let classType = message.split(' ')[2];
+        switch (classType) {
+            case 's':
+                classType = 'soldier'
+                break;
+            case 'd':
+                classType = 'demo'
+                break;
+            case 'b':
+                classType = 'both'
+                break;
+            default:
+                break;
+        }
+        if (classType == 'soldier' || classType == 'demo' || classType == 'both') {
+            let result = Unknown.Add(map, classType)
+            if (result) {
+                client.say(channel, `map added into ${classType}`)
+            }
+            else {
+                client.say(channel, `map could not be added into ${classType}`);
+            }
+        }
+        else {
+            client.say(channel, 'no class found');
+        }
+    }
+    if (CommandIs('!tierremove') && "#" + userstate.username === channel) {
+        var map = ClosestsName(message.split(' ')[1].toLowerCase());
+        let result = Unknown.Remove(map);
+        if (result) {
+            client.say(channel, `${map} removed`);
+        }
+        else {
+            client.say(channel, `${map} not found`);
+        }
     }
     if (CommandIs('!playing')) {
         var searchTerm = message.split(' ').slice(1).join(' ');

@@ -18,7 +18,7 @@ function UpdateMapNames() {
                         missing++;
                     }
                 }
-                if(missing > 3){
+                if (missing > 3) {
                     return map;
                 }
             })
@@ -27,11 +27,42 @@ function UpdateMapNames() {
             //todo: add commands to add and delete maps from MapIntended json
             fs.writeFileSync('MapNames.json', JSON.stringify(maps));
             mapNames = maps;
+            Unknown.maps = JSON.parse(fs.readFileSync('./MapIntended.json'));
             console.log('Map list has been updated!');
         })
         .catch(function (error) {
             console.log(error.response.data.error);
         })
+}
+let Unknown = {
+    maps: JSON.parse(fs.readFileSync('./MapIntended.json')),
+    ListMaps: function () {
+        let message = '';
+        this.maps["unknown"].forEach(map => message += map + ', ');
+        return message.substring(0, message.length - 1);;
+    },
+    Add: function (map, classType) {
+        if (this.maps["unknown"].includes(map)) {
+            this.maps[classType].push(map);
+            this.maps["unknown"].splice(this.maps["unknown"].indexOf(map), 1);
+            fs.writeFileSync('MapIntended.json', JSON.stringify(this.maps));
+            return true;
+        }
+        else {
+            return false;
+        }
+    },
+    Remove: function (map) {
+        let result = false;
+        for (var classType in this.maps) {
+            if (this.maps[classType].includes(map)) {
+                this.maps[classType].splice(this.maps[classType].indexOf(map), 1);
+                fs.writeFileSync('MapIntended.json', JSON.stringify(this.maps));
+                result = true;
+            }
+        }
+        return result;
+    }
 }
 function ClosestsName(queryName) {
     var foundMap;
@@ -66,6 +97,7 @@ function Intended(map) {
             return classType.charAt(0);
         }
     }
+    return "";
 }
 function StripVersion(map) {
     var pattern = /(_rc|_v|_b|_a)[0-9]\w{0,}/g;
@@ -154,4 +186,5 @@ exports.secondsToTimeFormat = secondsToTimeFormat;
 exports.secondsToTimeStamp = secondsToTimeStamp;
 exports.Intended = Intended;
 exports.Random = Random;
+exports.Unknown = Unknown;
 exports.Disabled = Disabled;
