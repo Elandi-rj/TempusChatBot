@@ -45,6 +45,9 @@
  !tempusenable (mod/streamer only) <br>
  !tempusdisable (mod/streamer only) <br>
  !tempuscommands <br>
+ !tierlist (streamer only) <br> 
+ !tieradd map class (streamer only) <br>
+ !tierremove map (streamer only) <br>
 
 # Examples
  !playing bwai <br>
