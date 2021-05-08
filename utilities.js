@@ -27,7 +27,6 @@ function UpdateMapNames() {
             //todo: add commands to add and delete maps from MapIntended json
             fs.writeFileSync('MapNames.json', JSON.stringify(maps));
             mapNames = maps;
-            Unknown.maps = JSON.parse(fs.readFileSync('./MapIntended.json'));
             console.log('Map list has been updated!');
         })
         .catch(function (error) {
@@ -35,33 +34,50 @@ function UpdateMapNames() {
         })
 }
 let Unknown = {
-    maps: JSON.parse(fs.readFileSync('./MapIntended.json')),
     ListMaps: function () {
-        let message = '';
-        this.maps["unknown"].forEach(map => message += map + ', ');
-        return message.substring(0, message.length - 1);;
+        try {
+            maps = JSON.parse(fs.readFileSync('./MapIntended.json'));
+            let message = '';
+            maps["unknown"].forEach(map => message += map + ', ');
+            return message.substring(0, message.length - 2);;
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
     },
     Add: function (map, classType) {
-        if (this.maps["unknown"].includes(map)) {
-            this.maps[classType].push(map);
-            this.maps["unknown"].splice(this.maps["unknown"].indexOf(map), 1);
-            fs.writeFileSync('MapIntended.json', JSON.stringify(this.maps));
-            return true;
-        }
-        else {
-            return false;
+        try {
+            maps = JSON.parse(fs.readFileSync('./MapIntended.json'));
+            if (maps["unknown"].includes(map)) {
+                maps[classType].push(map);
+                maps["unknown"].splice(maps["unknown"].indexOf(map), 1);
+                fs.writeFileSync('MapIntended.json', JSON.stringify(maps));
+                return true;
+            }
+            else {
+                return false;
+            }
+        } catch (error) {
+            console.log(error);
+            throw error;
         }
     },
     Remove: function (map) {
-        let result = false;
-        for (var classType in this.maps) {
-            if (this.maps[classType].includes(map)) {
-                this.maps[classType].splice(this.maps[classType].indexOf(map), 1);
-                fs.writeFileSync('MapIntended.json', JSON.stringify(this.maps));
-                result = true;
+        try {
+            maps = JSON.parse(fs.readFileSync('./MapIntended.json'));
+            let result = false;
+            for (var classType in maps) {
+                if (maps[classType].includes(map)) {
+                    maps[classType].splice(maps[classType].indexOf(map), 1);
+                    fs.writeFileSync('MapIntended.json', JSON.stringify(maps));
+                    result = true;
+                }
             }
+            return result;
+        } catch (error) {
+            console.log(error);
+            throw error;
         }
-        return result;
     }
 }
 function ClosestsName(queryName) {
@@ -153,7 +169,6 @@ function secondsToTimeFormat(time) {
     ret += "" + secs;
     return ret;
 }
-
 let Disabled = {
     disabledList: [],
     Find: function (channelName) {

@@ -599,9 +599,10 @@ client.on("chat", (channel, userstate, message, self) => {
     }
     if (CommandIs('!update') && "#" + userstate.username === channel) {
         UpdateMapNames();
+        client.say(channel, 'maplist updated');
     }
     if (CommandIs('!tierlist') && "#" + userstate.username === channel) {
-        if (Unknown.maps["unknown"].length > 1) {
+        if (Unknown.ListMaps()) {
             let maps = Unknown.ListMaps();
             client.say(channel, maps);
         }
@@ -611,7 +612,7 @@ client.on("chat", (channel, userstate, message, self) => {
     }
     if (CommandIs('!tieradd') && "#" + userstate.username === channel) {
         let map = ClosestsName(message.split(' ')[1].toLowerCase());
-        let classType = message.split(' ')[2];
+        let classType = message.split(' ')[2].toLowerCase();
         switch (classType) {
             case 's':
                 classType = 'soldier'
@@ -628,10 +629,10 @@ client.on("chat", (channel, userstate, message, self) => {
         if (classType == 'soldier' || classType == 'demo' || classType == 'both') {
             let result = Unknown.Add(map, classType)
             if (result) {
-                client.say(channel, `map added into ${classType}`)
+                client.say(channel, `${map} added into ${classType}`)
             }
             else {
-                client.say(channel, `map could not be added into ${classType}`);
+                client.say(channel, `${map} could not be added into ${classType}`);
             }
         }
         else {
