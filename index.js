@@ -599,8 +599,14 @@ client.on("chat", (channel, userstate, message, self) => {
         }
     }
     if (CommandIs('!update') && "#" + userstate.username === channel) {
-        UpdateMapNames();
-        client.say(channel, 'maplist updated');
+        UpdateMapNames().then(result => {
+            if (result) {
+                client.say(channel, 'maplist updated');
+            }
+            else {
+                client.say(channel, 'could not update maplist');
+            }
+        });
     }
     if (CommandIs('!tierlist') && "#" + userstate.username === channel) {
         if (Unknown.ListMaps()) {

@@ -1,10 +1,10 @@
 const fs = require('fs');
 let mapNames = JSON.parse(fs.readFileSync('./MapNames.json'));
 
-function UpdateMapNames() {
+async function UpdateMapNames() {
     var query = 'https://tempus.xyz/api/maps/detailedList';
     const axios = require('axios');
-    axios.get(query)
+    return await axios.get(query)
         .then(function (response) {
             var maps = [];
             response.data.forEach(element => {
@@ -27,9 +27,11 @@ function UpdateMapNames() {
             fs.writeFileSync('MapNames.json', JSON.stringify(maps));
             mapNames = maps;
             console.log('Map list has been updated!');
+            return true;
         })
         .catch(function (error) {
             console.log(error.response.data.error);
+            return false;
         })
 }
 let Unknown = {
@@ -38,7 +40,7 @@ let Unknown = {
             maps = JSON.parse(fs.readFileSync('./MapIntended.json'));
             let message = '';
             maps["unknown"].forEach(map => message += map + ', ');
-            return message.substring(0, message.length - 2);;
+            return message.substring(0, message.length - 2);
         } catch (error) {
             console.log(error);
             throw error;
