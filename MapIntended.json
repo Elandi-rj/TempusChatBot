@@ -4,7 +4,6 @@
         "jump_ahh_c",
         "jump_4holers_fix",
         "jump_blubber_b4",
-        "jump_power_rc1",
         "jump_escape_rc4",
         "jump_waltz_rc6",
         "jump_diamant_rc5",
@@ -72,7 +71,6 @@
         "jump_bunker_final",
         "jump_butter",
         "jump_buttered_b2",
-        "jump_camp_rc2",
         "jump_canyon_b1",
         "jump_catch_final",
         "jump_cetalu_rc1",
@@ -393,9 +391,14 @@
         "jump_nysel_final2",
         "jump_testalla_final",
         "jump_detached_rcx",
-        "jump_sampi_rc4",
         "jump_ahrabaid_b2",
-        "jump_oddie_a4"
+        "jump_oddie_a4",
+        "jump_sampi_rc5",
+        "jump_back_v3",
+        "jump_murus_b3",
+        "jump_zuza_rc2",
+        "jump_power_rc3",
+        "jump_camp_rc2"
     ],
     "both": [
         "jump_autumn_rc3",
@@ -625,7 +628,8 @@
         "sj_naissancee_tf2",
         "sj_providence_tf",
         "jump_booyah_jmc",
-        "jump_yes_b4"
+        "jump_yes_b4",
+        "jump_nova_a8"
     ],
     "unknown": []
 }
