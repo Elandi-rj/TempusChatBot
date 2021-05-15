@@ -79,6 +79,31 @@ let Unknown = {
             console.log(error);
             throw error;
         }
+    },
+    Duplicates: function (map) {
+        try {
+            if (map) {
+                map = StripVersion(map);
+                let mapRegex = new RegExp(map, "g");
+                maps = JSON.parse(fs.readFileSync('./MapIntended.json'));
+                let duplicates = '';
+                for (var classType in maps) {
+                    for (let i = 0; i < maps[classType].length; i++) {
+                        if (maps[classType][i].match(mapRegex)) {
+                            duplicates += maps[classType][i] + ', ';
+                        }
+                    }
+                }
+                return duplicates.substring(0, duplicates.length - 2);
+            }
+            else {
+                return '';
+            }
+
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
     }
 }
 function ClosestsName(queryName) {

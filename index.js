@@ -656,6 +656,26 @@ client.on("chat", (channel, userstate, message, self) => {
             client.say(channel, `${map} not found`);
         }
     }
+    if (CommandIs('!tierremoveexact') && "#" + userstate.username === channel) {
+        let result = Unknown.Remove(commandMap);
+        if (result) {
+            client.say(channel, `${commandMap} removed`);
+        }
+        else {
+            client.say(channel, `${commandMap} not found`);
+        }
+    }
+    if (CommandIs('!tierduplicates')) {
+        if (commandMap != '') {
+            if (Unknown.Duplicates(commandMap)) {
+                let maps = Unknown.Duplicates(commandMap);
+                client.say(channel, maps);
+            }
+            else {
+                client.say(channel, 'no duplicate maps found');
+            }
+        }
+    }
     if (CommandIs('!playing')) {
         var searchTerm = message.split(' ').slice(1).join(' ');
         SearchPlayer(searchTerm).then(player => {

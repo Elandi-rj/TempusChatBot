@@ -46,6 +46,8 @@
  !tempusdisable (mod/streamer only) <br>
  !tempuscommands <br>
  !tierlist (streamer only) <br> 
+ !tierduplicates map (streamer only) <br> 
+ !tierremoveexact map (streamer only) <br> 
  !tieradd map class (streamer only) <br>
  !tierremove map (streamer only) <br>
 
