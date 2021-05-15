@@ -119,6 +119,9 @@ function StripVersion(map) {
     if (pattern.test(map)) {
         return map.replace(pattern, '');
     }
+    else {
+        return map;
+    }
 }
 function secondsToTimeStamp(seconds) { //Larry's
     var sign = "";
