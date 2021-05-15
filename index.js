@@ -618,8 +618,11 @@ client.on("chat", (channel, userstate, message, self) => {
         }
     }
     if (CommandIs('!tieradd') && "#" + userstate.username === channel) {
-        let map = ClosestsName(message.split(' ')[1].toLowerCase());
-        let classType = message.split(' ')[2].toLowerCase();
+        let map = ClosestsName(commandMap);
+        let classType = message.split(' ')[2];
+        if (message.split(' ')[2]) {
+            classType = classType.toLowerCase();
+        }
         switch (classType) {
             case 's':
                 classType = 'soldier'
@@ -647,7 +650,7 @@ client.on("chat", (channel, userstate, message, self) => {
         }
     }
     if (CommandIs('!tierremove') && "#" + userstate.username === channel) {
-        var map = ClosestsName(message.split(' ')[1].toLowerCase());
+        let map = ClosestsName(commandMap);
         let result = Unknown.Remove(map);
         if (result) {
             client.say(channel, `${map} removed`);
