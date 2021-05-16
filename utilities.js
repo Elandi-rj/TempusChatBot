@@ -135,7 +135,7 @@ let Random = {
 function Intended(map) {
     let mapIntended = JSON.parse(fs.readFileSync('./MapIntended.json'));
     for (var classType in mapIntended) {
-        if (mapIntended[classType].includes(map)) {
+        if (mapIntended[classType].includes(map) && classType != "unknown") {
             return classType.charAt(0);
         }
     }
