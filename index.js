@@ -16,6 +16,8 @@ const FindTempusRecordPlayer = require('./players').FindTempusRecordPlayer;
 const client = new tmi.client(options);
 client.connect();
 
+UpdateMapNames();
+
 client.on("chat", (channel, userstate, message, self) => {
     //channel is which channel it comes from. Not very usable if you are in one channel only.
     //Userstate is an object which contains a lot of information, if the user who wrote is a subscriber, what emotes he used etc.
