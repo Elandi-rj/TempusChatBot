@@ -104,6 +104,16 @@ let Unknown = {
             console.log(error);
             throw error;
         }
+    },
+    MessageToMapObject: function (ListOfMapsAndTiers) {
+        MapsObject = ListOfMapsAndTiers.split(' |')
+            .map(m =>
+                m.split(' ')
+                    .splice(-3, 3))
+            .map(m => m = { "map": m[0], "classType": m[2].toLowerCase() }
+            );
+        MapsObject.splice(-1, 2);
+        return MapsObject;
     }
 }
 function ClosestsName(queryName) {

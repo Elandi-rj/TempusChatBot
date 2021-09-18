@@ -50,6 +50,7 @@
  !tierremoveexact map (streamer only) <br> 
  !tieradd map class (streamer only) <br>
  !tierremove map (streamer only) <br>
+ !massadd map (streamer only) <br>
 
 # Examples
  !playing bwai <br>

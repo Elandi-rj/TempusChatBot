@@ -651,6 +651,45 @@ client.on("chat", (channel, userstate, message, self) => {
             client.say(channel, 'no class found');
         }
     }
+    if (CommandIs('!massadd') && "#" + userstate.username === channel) {
+        let mapString = message.split('!massadd ')[1];
+        let mapsToAdd = Unknown.MessageToMapObject(mapString);
+        mapsToAdd.forEach(m => {
+            classType = m["classType"];
+            switch (classType) {
+                case 's':
+                    classType = 'soldier'
+                    break;
+                case 'd':
+                    classType = 'demo'
+                    break;
+                case 'd/s':
+                    classType = 'both'
+                    break;
+                case 's/d':
+                    classType = 'both'
+                    break;
+                case 'b':
+                    classType = 'both'
+                    break;
+                default:
+                    break;
+            }
+            m["classType"] = classType;
+        })
+        listOfMapsAdded = 'ADDED: ';
+        listOfMapsNotAdded = 'NOT ADDED: ';
+        mapsToAdd.forEach(m => {
+            let result = Unknown.Add(m["map"], m["classType"])
+            if (result) {
+                listOfMapsAdded += `${m["map"]} ${m["classType"]} | `
+            }
+            else {
+                listOfMapsNotAdded += `${m["map"]} ${m["classType"]} | `
+            }
+        });
+        client.say(channel, listOfMapsAdded + ' ' + listOfMapsNotAdded);
+    }
     if (CommandIs('!tierremove') && "#" + userstate.username === channel) {
         let map = ClosestsName(commandMap);
         let result = Unknown.Remove(map);
