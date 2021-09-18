@@ -127,7 +127,7 @@ function FindPlayer(name) {
 }
 function FindPlayerFromChannel(channelName) {
     return players.find(p =>
-        '#' + p.channel == channelName
+        '#' + p.channel.toLowerCase() == channelName.toLowerCase()
     );
 }
 exports.FindTempusRecordPlayer = FindTempusRecordPlayer;
