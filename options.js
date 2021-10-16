@@ -1,3 +1,4 @@
+const GetChannels = require('./players').GetChannels;
 const options = {
     options: {
         debug: true
@@ -10,7 +11,7 @@ const options = {
         password: "oauth:twitchAuthKey",
         youtubeApi: "YoutubeApiKey"
     },
-    channels: ['elandi']
+    channels: GetChannels()
 };
 
 
