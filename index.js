@@ -24,7 +24,7 @@ client.on("chat", (channel, userstate, message, self) => {
     //message is the message itself.
     //self is your bot. 
     if (self) return;
-
+    if (message.split('')[0] != "!") return;
     var command = message.split(' ')[0];
     var commandMap = message.split(' ')[1];
     if (message.split(' ')[1]) {
