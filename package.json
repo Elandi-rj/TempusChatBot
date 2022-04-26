@@ -10,6 +10,8 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^0.21.2",
+    "heroku-client": "^3.1.0",
+    "pg": "^8.7.3",
     "tmi.js": "^1.7.1"
   }
 }

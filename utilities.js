@@ -1,7 +1,8 @@
 const fs = require('fs');
+const db = require('./db');
 let mapNames = JSON.parse(fs.readFileSync('./MapNames.json'));
 
-async function UpdateMapNames() {
+async function UpdateMapNames(DBmapsIntended) {
     var query = 'https://tempus.xyz/api/maps/detailedList';
     const axios = require('axios');
     return await axios.get(query)
@@ -10,20 +11,14 @@ async function UpdateMapNames() {
             response.data.forEach(element => {
                 maps.push(element.name);
             });
-            let currentMaps = JSON.parse(fs.readFileSync('./MapIntended.json'));
-            let notAdded = maps.filter(map => {
-                let missing = 0;
-                for (var classType in currentMaps) {
-                    if (currentMaps[classType].includes(map) == false) {
-                        missing++;
-                    }
+            maps.forEach(map => {
+                var included = DBmapsIntended.filter(dbm => dbm.name == map);
+                if (!included[0]) {
+                    insertMapQuery = `INSERT INTO public.maps(name) VALUES ('${map}')`
+                    db.query(insertMapQuery);
                 }
-                if (missing > 3) {
-                    return map;
-                }
-            })
-            currentMaps["unknown"].push(...notAdded);
-            fs.writeFileSync('MapIntended.json', JSON.stringify(currentMaps));
+            });
+
             fs.writeFileSync('MapNames.json', JSON.stringify(maps));
             mapNames = maps;
             console.log('Map list has been updated!');
@@ -35,76 +30,6 @@ async function UpdateMapNames() {
         })
 }
 let Unknown = {
-    ListMaps: function () {
-        try {
-            maps = JSON.parse(fs.readFileSync('./MapIntended.json'));
-            let message = '';
-            maps["unknown"].forEach(map => message += map + ', ');
-            return message.substring(0, message.length - 2);
-        } catch (error) {
-            console.log(error);
-            throw error;
-        }
-    },
-    Add: function (map, classType) {
-        try {
-            maps = JSON.parse(fs.readFileSync('./MapIntended.json'));
-            if (maps["unknown"].includes(map)) {
-                maps[classType].push(map);
-                maps["unknown"].splice(maps["unknown"].indexOf(map), 1);
-                fs.writeFileSync('MapIntended.json', JSON.stringify(maps));
-                return true;
-            }
-            else {
-                return false;
-            }
-        } catch (error) {
-            console.log(error);
-            throw error;
-        }
-    },
-    Remove: function (map) {
-        try {
-            maps = JSON.parse(fs.readFileSync('./MapIntended.json'));
-            let result = false;
-            for (var classType in maps) {
-                if (maps[classType].includes(map)) {
-                    maps[classType].splice(maps[classType].indexOf(map), 1);
-                    fs.writeFileSync('MapIntended.json', JSON.stringify(maps));
-                    result = true;
-                }
-            }
-            return result;
-        } catch (error) {
-            console.log(error);
-            throw error;
-        }
-    },
-    Duplicates: function (map) {
-        try {
-            if (map) {
-                map = StripVersion(map);
-                let mapRegex = new RegExp(map, "g");
-                maps = JSON.parse(fs.readFileSync('./MapIntended.json'));
-                let duplicates = '';
-                for (var classType in maps) {
-                    for (let i = 0; i < maps[classType].length; i++) {
-                        if (maps[classType][i].match(mapRegex)) {
-                            duplicates += maps[classType][i] + ', ';
-                        }
-                    }
-                }
-                return duplicates.substring(0, duplicates.length - 2);
-            }
-            else {
-                return '';
-            }
-
-        } catch (error) {
-            console.log(error);
-            throw error;
-        }
-    },
     MessageToMapObject: function (ListOfMapsAndTiers) {
         MapsObject = ListOfMapsAndTiers.split(' |')
             .map(m =>
@@ -132,24 +57,23 @@ function ClosestsName(queryName) {
     return foundMap;
 }
 let Random = {
-    Map: function () {
-        let rand = Math.floor(Math.random() * mapNames.length);
-        return mapNames[rand];
+    Map: function (DBmaps) {
+        let rand = Math.floor(Math.random() * DBmaps.length);
+        return DBmaps[rand].name;
     },
-    ClassMap: function (className) {
-        let mapIntended = JSON.parse(fs.readFileSync('./MapIntended.json'));
-        let rand = Math.floor(Math.random() * mapIntended[className].length);
-        return mapIntended[className][rand];
+    ClassMap: function (className, DBmaps) {
+        let classMaps = DBmaps.filter(m => m.class == className);
+        let rand = Math.floor(Math.random() * classMaps.length);
+        return classMaps[rand].name;
     }
 }
-function Intended(map) {
-    let mapIntended = JSON.parse(fs.readFileSync('./MapIntended.json'));
-    for (var classType in mapIntended) {
-        if (mapIntended[classType].includes(map) && classType != "unknown") {
-            return classType.charAt(0);
-        }
+function Intended(map, DBmapIntended) {
+    let foundMap = DBmapIntended.find(m => map == m.name)
+    if (foundMap && foundMap.class) {
+        return foundMap.class.charAt(0);
     }
-    return "";
+    else { return '' }
+
 }
 function StripVersion(map) {
     var pattern = /(_rc|_v|_b|_a)[0-9]\w{0,}/g;
