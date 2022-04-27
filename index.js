@@ -686,6 +686,12 @@ db.query(playerQuery).then(p => {
                     client.say(channel, err.message);
                 })
             }
+            if (CommandIs('!listchannels') && userstate.username === 'elandi') {
+                tlist = DBplayers
+                    .filter(p => p.channel)
+                    .map(p => ' ' + p.channel);
+                client.say(channel, tlist + '');
+            }
             if (CommandIs('!tierlist') && "#" + userstate.username === channel) {
                 db.query(`SELECT * FROM public.maps WHERE class IS NULL`).then(m => {
                     if (!m.rows[0]) {
