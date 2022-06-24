@@ -332,6 +332,7 @@ db.query(playerQuery).then(p => {
                         var steamId = response.data.results[classResponse][0].steamid;
                         var name = '';
                         var tempusRecordsNickName = '';
+                        var tempusRecordsNickNameNormalised = '';
                         var date = response.data.results[classResponse][0].date;
                         if (FindTempusRecordPlayer(steamId)) {
                             tempusRecordsNickName = FindTempusRecordPlayer(steamId).name.replace(' ', '+');
