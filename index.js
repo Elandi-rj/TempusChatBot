@@ -322,6 +322,7 @@ client.on("chat", (channel, userstate, message, self) => {
                 var steamId = response.data.results[classResponse][0].steamid;
                 var name = '';
                 var tempusRecordsNickName = '';
+                tempusRecordsNickNameNormalised = '';
                 var date = response.data.results[classResponse][0].date;
                 if (FindTempusRecordPlayer(steamId)) {
                     tempusRecordsNickName = FindTempusRecordPlayer(steamId).name.replace(' ', '+');
