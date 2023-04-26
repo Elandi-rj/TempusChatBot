@@ -117,6 +117,7 @@
  !tempusenable (mod/streamer only) <br>
  !tempusdisable (mod/streamer only) <br>
  !tempuscommands <br>
+ Ignore these vvv <br><br>
  !tierlist (streamer only) <br> 
  !tierduplicates map (streamer only) <br> 
  !tierremoveexact map (streamer only) <br> 
