@@ -9,7 +9,7 @@
   "author": "Elandi",
   "license": "ISC",
   "dependencies": {
-    "axios": "^0.21.2",
+    "axios": "^1.6.0",
     "tmi.js": "^1.7.1"
   }
 }
