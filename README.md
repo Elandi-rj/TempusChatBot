@@ -52,8 +52,12 @@
  tempuschat: (Solly) jump_simplified_rc1 https://www.youtube.com/watch?v=sWu2dGTDM-o 
  ```
  ```
- !ssearch simplified
+ !swrvid simplified
  tempuschat: https://www.youtube.com/watch?v=qW7vSAnxiUQ (ff73 on jump_simplified_rc1 02:52.349) 
+ ```
+ ```
+!swrcvid simplified 1
+ tempuschat: https://www.youtube.com/watch?v=EyvUgR3AtQg (riot on jump_beef Course 1 0:12.149)
  ```
  ```
  !sbtime when 3 2 
@@ -99,7 +103,10 @@
  !m mapName <br>
  !m <br>
  !svid mapName <br>
- !ssearch mapName <br>
+ !swrvid mapName <br>
+ !swrvid <br>
+ !swrcvid mapName courseIndex <br>
+ !swrcvid courseIndex <br>
  !sbtime bonusIndex <br>
  !sbtime mapName bonusIndex <br>
  !sbtime mapName bonusIndex rankIndex <br>
@@ -110,7 +117,6 @@
  !sctime mapName courseIndex <br>
  !sctime mapName courseIndex rankIndex <br>
  !sctime mapName courseIndex playerName <br>
- !cc (or !coursesearch) <br>
  !random <br>
  !random s <br>
  !update (streamer only to update the map list any time new maps are added to tempus) <br>
