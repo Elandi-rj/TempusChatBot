@@ -57,7 +57,11 @@
  ```
  ```
 !swrcvid simplified 1
- tempuschat: https://www.youtube.com/watch?v=EyvUgR3AtQg (riot on jump_beef Course 1 0:12.149)
+ tempuschat: https://www.youtube.com/watch?v=EyvUgR3AtQg (riot on jump_beef course 1 0:12.149)
+ ```
+ ```
+!swrbvid simply 1
+ tempuschat: https://www.youtube.com/watch?v=aJNRxcxWLLg (nibs on jump_simply_v2 bonus 1 0:06.239)
  ```
  ```
  !sbtime when 3 2 
@@ -68,11 +72,11 @@
  tempuschat: (Solly) steve is ranked 11/49 on jump_simply_v2 bonus 1 with time: 0:08.99 
  ```
  ```
- !sbwr simply 
+ !swrb simply 1
  tempuschat: (Solly) Boshy is ranked 1 on jump_simply_v2 bonus 1 with time: 0:07.77 
  ```
  ```
- !scwr 4starters 3
+ !swrc 4starters 3
  tempuschat: (Solly) flightreacts is the GOAT is ranked 1 on jump_4starters_rc1 course 3 with time: 0:53.41 
  ```
  ```
@@ -83,9 +87,6 @@
  !sctime 4starters 5 3 
  tempuschat: (Solly) Carter is ranked 3 on jump_4starters_rc1 course 5 with time: 1:35.42 
  ```
- ```
- !cc (!coursesearch) 4starters 
- tempuschat: https://www.youtube.com/watch?v=xKF4imgDEY8 (jump_4starters_rc1 course collection) 
  ```
  
 # CurrentCommands (replace s with d for demo commands)
@@ -111,8 +112,8 @@
  !sbtime mapName bonusIndex <br>
  !sbtime mapName bonusIndex rankIndex <br>
  !sbtime mapName bonusIndex playerName <br>
- !sbwr mapName bonusIndex <br>
- !scwr mapName courseIndex <br>
+ !swrc mapName courseIndex <br>
+ !swrb mapName bonusIndex <br>
  !sctime courseIndex <br>
  !sctime mapName courseIndex <br>
  !sctime mapName courseIndex rankIndex <br>
