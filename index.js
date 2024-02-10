@@ -53,7 +53,7 @@ client.on("chat", (channel, userstate, message, self) => {
         if (index < 1 || isNaN(index)) { index = 1; }
         if (zoneIndex < 1 || isNaN(zoneIndex)) { zoneIndex = 1; }
 
-        var query = `https://tempus.xyz/api/maps/name/${map}/zones/typeindex/${zoneType}/${zoneIndex}/records/list?start=${index}&limit=1`
+        var query = `https://tempus2.xyz/api/maps/name/${map}/zones/typeindex/${zoneType}/${zoneIndex}/records/list?start=${index}&limit=1`
         console.log(query);
         axios.get(query)
             .then(function (response) {
@@ -83,7 +83,7 @@ client.on("chat", (channel, userstate, message, self) => {
     async function SearchPlayer(searchTerm) {
         var aliasPerson = FindPlayer(searchTerm);
         if (aliasPerson) {
-            var query = `https://tempus.xyz/api/players/id/${aliasPerson.id}/info`
+            var query = `https://tempus2.xyz/api/players/id/${aliasPerson.id}/info`
             return await axios.get(query)
                 .then(response => {
                     if (response.data) {
@@ -96,7 +96,7 @@ client.on("chat", (channel, userstate, message, self) => {
                 })
         }
         else {
-            var playerQuery = `https://tempus.xyz/api/search/playersAndMaps/${searchTerm.replace("/", '')}`;
+            var playerQuery = `https://tempus2.xyz/api/search/playersAndMaps/${searchTerm.replace("/", '')}`;
             console.log(playerQuery);
             return await axios.get(playerQuery)
                 .then(p => {
@@ -116,7 +116,7 @@ client.on("chat", (channel, userstate, message, self) => {
     }
     function SearchTimeWithPlayer(player, classResponse, map, zoneType, zoneIndex) {
         var classIndex = classResponse == 'soldier' ? 3 : 4;
-        var query = `https://tempus.xyz/api/maps/name/${map}/zones/typeindex/${zoneType}/${zoneIndex}/records/player/${player.id}/${classIndex}`;
+        var query = `https://tempus2.xyz/api/maps/name/${map}/zones/typeindex/${zoneType}/${zoneIndex}/records/player/${player.id}/${classIndex}`;
         console.log(query);
         axios.get(query)
             .then(function (response) {
@@ -143,7 +143,7 @@ client.on("chat", (channel, userstate, message, self) => {
             })
     }
     function MapInfo(searchTerm) {
-        var query = `https://tempus.xyz/api/maps/name/${searchTerm}/fullOverview`
+        var query = `https://tempus2.xyz/api/maps/name/${searchTerm}/fullOverview`
         console.log(query);
         axios.get(query)
             .then(function (response) {
@@ -178,7 +178,7 @@ client.on("chat", (channel, userstate, message, self) => {
             })
     }
     function AuthorInfo(searchTerm) {
-        var query = `https://tempus.xyz/api/maps/name/${searchTerm}/fullOverview`
+        var query = `https://tempus2.xyz/api/maps/name/${searchTerm}/fullOverview`
         console.log(query);
         axios.get(query)
             .then(function (response) {
@@ -199,7 +199,7 @@ client.on("chat", (channel, userstate, message, self) => {
             })
     }
     async function SearchPlayerMap(player) {
-        var query = `https://tempus.xyz/api/servers/statusList`;
+        var query = `https://tempus2.xyz/api/servers/statusList`;
         return await axios.get(query).then(response => {
             var map = '';
             var data = response.data;
@@ -218,7 +218,7 @@ client.on("chat", (channel, userstate, message, self) => {
         })
     }
     function PlayerRank(player, type) {
-        var query = `https://tempus.xyz/api/players/id/${player.id}/rank`;
+        var query = `https://tempus2.xyz/api/players/id/${player.id}/rank`;
         axios.get(query)
             .then(response => {
                 var person = response.data;
@@ -252,7 +252,7 @@ client.on("chat", (channel, userstate, message, self) => {
     }
     function SearchRank(index, type) {
         if (index < 1 || isNaN(index)) { index = 1; }
-        var query = `https://tempus.xyz/api/ranks/${type}?start=${index}`;
+        var query = `https://tempus2.xyz/api/ranks/${type}?start=${index}`;
         console.log(query);
         axios.get(query)
             .then(response => {
