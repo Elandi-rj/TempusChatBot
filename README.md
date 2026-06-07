@@ -1,14 +1,29 @@
 # TempusChatBot
- chat bot that interfaces with the tempus api for twitch commands that emulate a lot of the functionality found in a tempus server
+ ### chat bot that interfaces with the tempus api for twitch commands that emulate a lot of the functionality found in a tempus server
 
 # Setup Guide 
- 1. Download and install <a href="https://nodejs.org/en/">Node.js</a> <br>
- 2. Download the project <a href="https://github.com/Elandi-rj/TempusChatBot/archive/master.zip">here</a> and unzip it anywhere <br>
- 3. Open <b>options.js</b> with any text editor and replace <b>YourBotTwitchName</b> with the twitch channel name for the bot to use and don't get rid of the quotes here or anywhere else
- 4. (Optional) To make the ssearch command return a direct link you need a youtube data api. You can read about getting one <a href="https://developers.google.com/youtube/v3/getting-started">here</a> and put it in the options file. The command will still work without one but instead of a direct link, it will return a query link, so 1 extra click.
- 4. Replace <b>oauth:twitchAuthKey</b> with the key for your bot channel, which can be found <a href="https://twitchapps.com/tmi/">here</a> <br>
- 5. Open <b>players.js</b> with a text editor and change the lines using the first example as a guide <br><b>alias</b> can be any name/nickname's you want, <br><b>id</b> is your tempus id which you can either find in game on a tempus server or go to https://tempus.xyz/ and search for your profile, your id will be in the URL after players/ for example https://tempus.xyz/players/170674/overall this is my profile and the number is my id. <br>in <b>channel</b> type your twitch channel name <br>You can run the bot in multiple channels by adding another entry to this list.
- 6. Finally you can start the bot by running <b>start.bat</b>, and type <b>!update</b> in twitch with the bot on, it will take a few seconds to finish, any time tempus adds new maps you will need to run this command again. Bot should be fully functional now.
+<h3> 
+ 1. Download the project <a href="https://github.com/Elandi-rj/TempusChatBot/releases/download/v2/tempus-chat.7z">here</a> and unzip it anywhere <br>
+ 
+ 2. The options.json file is filled in with made up api keys and must be configured to work. Open <b>options.json</b> with any text editor and edit only the fields mentioned here<br>
+ 
+ 3. "password": change the key to your chosen twitch bot channel, which can be found <a href="https://twitchtokengenerator.com/">here</a> (choose bot token) and replace the string of letters and numbers, keeping oauth: like the example <br>
+ 
+ 4. "youtubeApi": (Optional) To make the !swrvid command return a direct link you need a youtube data api. You can read about getting one <a href="https://developers.google.com/youtube/v3/getting-started">here</a> and put it in the youtubeApi. The command will still work without one but instead of a direct link, it will return a query link, so 1 extra click.
+<br>If you don't want to bother, leave the key blank like so: "youtubeApi": "",
+ 
+ 5. "steamApi":,  can be found <a href="https://steamcommunity.com/dev/apikey">here</a>
+ 
+ 6. "alias": whatever nickname you want to show up as when the bot refers to your account, if it doesn't change you may need to find your entry inside nicknames.json and delete it
+
+ 7. "tempusId": this can found by going to <a href="https://tempus2.xyz/">tempus2.xyz</a> and typing your current steam name in the search field, after going to your tempus profile, look at the url and extract the number that comes after "xyz/players/", which can be entered into the tempusId field
+
+ 8. "twitchChannel": here you just type the exact name of your twitch channel, this is what the bot connects to
+
+ 9. "steamId64": go <a href="https://steamid.io/">here</a> and paste your steam profile link, enter the steamid64 that you find
+
+ If everything has been configured correctly, you should be able to launch tempus-chat.exe
+ </h3>
  
  # Command Examples
  ```
