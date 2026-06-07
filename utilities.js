@@ -1,8 +1,10 @@
 const fs = require('fs');
+const { client } = require('tmi.js');
+
 let mapNames = JSON.parse(fs.readFileSync('./MapNames.json'));
 
-async function UpdateMapNames() {
-    var query = 'https://tempus.xyz/api/maps/detailedList';
+async function UpdateMapNames(DBmapsIntended) {
+    var query = 'https://tempus2.xyz/api/v0/maps/detailedList';
     const axios = require('axios');
     return await axios.get(query)
         .then(function (response) {
@@ -10,20 +12,14 @@ async function UpdateMapNames() {
             response.data.forEach(element => {
                 maps.push(element.name);
             });
-            let currentMaps = JSON.parse(fs.readFileSync('./MapIntended.json'));
-            let notAdded = maps.filter(map => {
-                let missing = 0;
-                for (var classType in currentMaps) {
-                    if (currentMaps[classType].includes(map) == false) {
-                        missing++;
-                    }
+           maps.forEach(map => {
+                var included = DBmapsIntended.filter(dbm => dbm.name == map);
+                if (!included[0]) {
+                    DBmapsIntended.push({name: map, class: ''})
                 }
-                if (missing > 3) {
-                    return map;
-                }
-            })
-            currentMaps["unknown"].push(...notAdded);
-            fs.writeFileSync('MapIntended.json', JSON.stringify(currentMaps));
+            });
+            
+            fs.writeFileSync('DBmaps.json', JSON.stringify(DBmapsIntended));
             fs.writeFileSync('MapNames.json', JSON.stringify(maps));
             mapNames = maps;
             console.log('Map list has been updated!');
@@ -34,77 +30,14 @@ async function UpdateMapNames() {
             return false;
         })
 }
+function UpdateMapNamesFromDB(DBmapsIntended) {
+    let maps = DBmapsIntended.map(dbm => dbm.name);
+    fs.writeFileSync('MapNames.json', JSON.stringify(maps));
+    mapNames = maps;
+    console.log('Map list has been updated from database!');
+    return true;
+}
 let Unknown = {
-    ListMaps: function () {
-        try {
-            maps = JSON.parse(fs.readFileSync('./MapIntended.json'));
-            let message = '';
-            maps["unknown"].forEach(map => message += map + ', ');
-            return message.substring(0, message.length - 2);
-        } catch (error) {
-            console.log(error);
-            throw error;
-        }
-    },
-    Add: function (map, classType) {
-        try {
-            maps = JSON.parse(fs.readFileSync('./MapIntended.json'));
-            if (maps["unknown"].includes(map)) {
-                maps[classType].push(map);
-                maps["unknown"].splice(maps["unknown"].indexOf(map), 1);
-                fs.writeFileSync('MapIntended.json', JSON.stringify(maps));
-                return true;
-            }
-            else {
-                return false;
-            }
-        } catch (error) {
-            console.log(error);
-            throw error;
-        }
-    },
-    Remove: function (map) {
-        try {
-            maps = JSON.parse(fs.readFileSync('./MapIntended.json'));
-            let result = false;
-            for (var classType in maps) {
-                if (maps[classType].includes(map)) {
-                    maps[classType].splice(maps[classType].indexOf(map), 1);
-                    fs.writeFileSync('MapIntended.json', JSON.stringify(maps));
-                    result = true;
-                }
-            }
-            return result;
-        } catch (error) {
-            console.log(error);
-            throw error;
-        }
-    },
-    Duplicates: function (map) {
-        try {
-            if (map) {
-                map = StripVersion(map);
-                let mapRegex = new RegExp(map, "g");
-                maps = JSON.parse(fs.readFileSync('./MapIntended.json'));
-                let duplicates = '';
-                for (var classType in maps) {
-                    for (let i = 0; i < maps[classType].length; i++) {
-                        if (maps[classType][i].match(mapRegex)) {
-                            duplicates += maps[classType][i] + ', ';
-                        }
-                    }
-                }
-                return duplicates.substring(0, duplicates.length - 2);
-            }
-            else {
-                return '';
-            }
-
-        } catch (error) {
-            console.log(error);
-            throw error;
-        }
-    },
     MessageToMapObject: function (ListOfMapsAndTiers) {
         MapsObject = ListOfMapsAndTiers.split(' |')
             .map(m =>
@@ -119,6 +52,26 @@ let Unknown = {
 function ClosestsName(queryName) {
     var foundMap;
     try {
+        const regex = /^['"](.*)['"]$/;
+        if (regex.test(queryName)){
+            return queryName.replace(/["']/g, '');
+        }
+        if (queryName) {
+            let first4letters = queryName.substring(0, 4);
+            let first2letters = queryName.substring(0, 2);
+            if (first4letters != 'jump' && first2letters != 'rj' && first2letters != 'sj') {
+                let fullJumpName = 'jump_' + queryName;
+                console.log(fullJumpName)
+                let MatchingMap = FindMatchingMap(fullJumpName)
+                if (MatchingMap) {
+                    return MatchingMap;
+                }
+            }
+            let MatchingMap = FindMatchingMap(queryName)
+            if (MatchingMap) {
+                return MatchingMap;
+            }
+        }
         var mapRegex = new RegExp(queryName, "g");
         for (let i = 0; i < mapNames.length; i++) {
             if (mapNames[i].match(mapRegex)) {
@@ -131,25 +84,40 @@ function ClosestsName(queryName) {
     }
     return foundMap;
 }
-let Random = {
-    Map: function () {
-        let rand = Math.floor(Math.random() * mapNames.length);
-        return mapNames[rand];
-    },
-    ClassMap: function (className) {
-        let mapIntended = JSON.parse(fs.readFileSync('./MapIntended.json'));
-        let rand = Math.floor(Math.random() * mapIntended[className].length);
-        return mapIntended[className][rand];
-    }
-}
-function Intended(map) {
-    let mapIntended = JSON.parse(fs.readFileSync('./MapIntended.json'));
-    for (var classType in mapIntended) {
-        if (mapIntended[classType].includes(map) && classType != "unknown") {
-            return classType.charAt(0);
+function FindMatchingMap(queryName) {
+    var foundMap;
+    if (queryName) {
+        try {
+            for (let i = 0; i < mapNames.length; i++) {
+                if (mapNames[i] == queryName) {
+                    foundMap = mapNames[i];
+                    break;
+                }
+            }
+        } catch (error) {
+            console.log(error);
         }
     }
-    return "";
+    return foundMap;
+}
+let Random = {
+    Map: function (DBmaps) {
+        let rand = Math.floor(Math.random() * DBmaps.length);
+        return DBmaps[rand].name;
+    },
+    ClassMap: function (className, DBmaps) {
+        let classMaps = DBmaps.filter(m => m.class == className);
+        let rand = Math.floor(Math.random() * classMaps.length);
+        return classMaps[rand].name;
+    }
+}
+function Intended(map, DBmapIntended) {
+    let foundMap = DBmapIntended.find(m => map == m.name)
+    if (foundMap && foundMap.class) {
+        return foundMap.class.charAt(0);
+    }
+    else { return '' }
+
 }
 function StripVersion(map) {
     var pattern = /(_rc|_v|_b|_a)[0-9]\w{0,}/g;
@@ -190,6 +158,31 @@ function secondsToTimeStamp(seconds) { //Larry's
     else timeStamp += "00" + milliseconds;
 
     return timeStamp;
+}
+function formatTime(ms, decimals = 3) { //Pear's
+    if (!ms) return '0:00' + (decimals ? '.' + '0'.repeat(decimals) : '')
+
+    let invert = false
+
+    if (ms < 0) {
+        invert = true
+        ms = Math.abs(ms)
+    }
+
+    ms = ms / 1000
+    let s = Math.floor(ms % 60)
+    let m = Math.floor(ms / 60 % 60)
+    let h = Math.floor(ms / 60 / 60)
+
+    if (!h) h = null
+    else if (!m) m = '00'
+    if (!s) s = '00'
+
+    let t = [h, m, s].filter(x => x !== null).map((x, i) => (i !== 0 && x < 10 && x !== '00') ? '0' + x : x)
+
+    let decs = (ms % 1).toString().slice(2) + '0'.repeat(16)
+
+    return (invert ? '-' : '') + t.join(':') + (decimals ? '.' + decs.slice(0, decimals) : '')
 }
 function secondsToTimeFormat(time) {
     // Hours, minutes and seconds
@@ -234,10 +227,13 @@ let Disabled = {
 }
 
 exports.ClosestsName = ClosestsName;
+exports.FindMatchingMap = FindMatchingMap;
 exports.StripVersion = StripVersion;
 exports.UpdateMapNames = UpdateMapNames;
+exports.UpdateMapNamesFromDB = UpdateMapNamesFromDB;
 exports.secondsToTimeFormat = secondsToTimeFormat;
 exports.secondsToTimeStamp = secondsToTimeStamp;
+exports.formatTime = formatTime;
 exports.Intended = Intended;
 exports.Random = Random;
 exports.Unknown = Unknown;
