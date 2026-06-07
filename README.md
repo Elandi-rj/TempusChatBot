@@ -7,7 +7,7 @@
  
  2. The options.json file is filled in with made up api keys and must be configured to work. Open <b>options.json</b> with any text editor and edit only the fields mentioned here<br>
  
- 3. "password": change the key to your chosen twitch bot channel, which can be found <a href="https://twitchtokengenerator.com/">here</a> (choose bot token) and replace the string of letters and numbers, keeping oauth: like the example <br>
+ 3. "password": change the key to your chosen twitch bot channel, which can be found <a href="https://twitchtokengenerator.com/">here</a> (choose bot token) and replace the string of letters and numbers<br>
  
  4. "youtubeApi": (Optional) To make the !swrvid command return a direct link you need a youtube data api. You can read about getting one <a href="https://developers.google.com/youtube/v3/getting-started">here</a> and put it in the youtubeApi. The command will still work without one but instead of a direct link, it will return a query link, so 1 extra click.
 <br>If you don't want to bother, leave the key blank like so: "youtubeApi": "",

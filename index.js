@@ -33,6 +33,8 @@ let userIdentity = [{
 
 AddAlias(options.identity)
 options.channels = [options.identity.twitchChannel];
+options.identity.username = options.identity.twitchChannel;
+options.identity.youtubeSearchChannelId = "UCV34MoxMwB6CAagbisQKKmw"; //tempus archive youtube channel id
 const client = new tmi.client(options);
 client.connect();
 client.on("chat", (channel, userstate, message, self) => {

@@ -6,12 +6,10 @@
     "reconnect": true
   },
   "identity": {
-    "username": "tempuschat",
-    "password": "oauth:8fhgka9shdhg2jgklgsda8",
+    "password": "8fhgka9shdhg2jgklgsda8",
     "youtubeApi": "Aig1238fSajgSA9g9sa80GGSaasssasd23SGhjKJHt",
-    "youtubeSearchChannelId": "UCV34MoxMwB6CAagbisQKKmw", 
     "steamApi": "AF8G8FJSAIDJWHAJHDSSDADG89883",
-    "alias": "how your name shows in !stime etc",
+    "alias": "xX_Elandi_Xx",
     "tempusId": "170674",
     "twitchChannel": "elandi",
     "steamId64": "76561198293964874"
