@@ -3,7 +3,7 @@
 
 # Setup Guide 
 <h3> 
- 1. Download the project <a href="https://github.com/Elandi-rj/TempusChatBot/releases/download/v2/tempus-chat.7z">here</a> and unzip it anywhere <br>
+ 1. Download the project <a href="https://github.com/Elandi-rj/TempusChatBot/releases/download/v.1.0.0/tempus-chat.7z">here</a> and unzip it anywhere <br>
  
  2. The options.json file is filled in with made up api keys and must be configured to work. Open <b>options.json</b> with any text editor and edit only the fields mentioned here<br>
  
